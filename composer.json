@@ -3,12 +3,11 @@
     "description": "MIT 219 Integrative Programming - Implementation Guide",
     "type": "project",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-mysqli": "*",
+        "ext-pdo": "*"
     },
     "scripts": {
         "start": "php -S 0.0.0.0:$PORT -t ."
-    },
-    "config": {
-        "optimize-autoloader": true
     }
 }

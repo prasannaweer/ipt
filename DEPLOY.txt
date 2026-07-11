@@ -1,0 +1,91 @@
+MIT 219 - How to Deploy to Railway (Free Hosting)
+==================================================
+
+PREREQUISITES:
+- GitHub account (free): https://github.com
+- Railway account (free): https://railway.app (sign up with GitHub)
+
+STEP 1: Create a GitHub Repository
+-----------------------------------
+1. Go to https://github.com/new
+2. Repository name: mit-ipt-implementations
+3. Visibility: Public (free) or Private
+4. Click "Create repository"
+
+STEP 2: Upload Files to GitHub
+-------------------------------
+Option A (Browser - easiest):
+1. On your new repo page, click "uploading an existing file"
+2. Drag and drop ALL files from: D:\WAMP26\www\mit\implementations\
+3. IMPORTANT: Do NOT upload the "node_modules" folder
+4. Click "Commit changes"
+
+Option B (Git commands in VS Code terminal):
+   cd D:\WAMP26\www\mit\implementations
+   git init
+   git add .
+   git commit -m "MIT 219 implementations"
+   git remote add origin https://github.com/YOUR_USERNAME/mit-ipt-implementations.git
+   git push -u origin main
+
+STEP 3: Deploy to Railway
+---------------------------
+1. Go to https://railway.app
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Select your "mit-ipt-implementations" repo
+4. Railway auto-detects PHP and starts building
+
+STEP 4: Add MySQL Database
+----------------------------
+1. In your Railway project dashboard, click "+ New"
+2. Select "Database" → "MySQL"
+3. Railway creates a MySQL instance automatically
+
+STEP 5: Set Environment Variables
+-----------------------------------
+1. Click on your PHP service (the main app)
+2. Go to "Variables" tab
+3. Add these 4 variables:
+
+   DB_HOST  = ${{MySQL.MYSQLHOST}}
+   DB_USER  = ${{MySQL.MYSQLUSER}}
+   DB_PASS  = ${{MySQL.MYSQLPASSWORD}}
+   DB_NAME  = ${{MySQL.MYSQLDATABASE}}
+
+   NOTE: These reference the Railway MySQL service.
+   The app auto-detects these even without manual setup.
+   But adding them ensures the connection works.
+
+STEP 6: Wait for Redeploy
+---------------------------
+After adding variables, Railway auto-redeploys.
+Wait 30-60 seconds for the build to finish.
+
+STEP 7: First Visit (Auto Setup)
+----------------------------------
+1. Railway gives you a URL like: https://your-app.up.railway.app
+2. First visit auto-creates tables + seeds data:
+   https://your-app.up.railway.app/db_setup.php
+3. All other pages now work!
+
+STEP 8: Your Live URLs
+------------------------
+Main Index:    https://your-app.up.railway.app/
+PHP Examples:  https://your-app.up.railway.app/4_PHP/01_hello_world.php
+Database:      https://your-app.up.railway.app/db_setup.php
+Students:      https://your-app.up.railway.app/4_PHP/10_database.php
+CRUD:          https://your-app.up.railway.app/4_PHP/09_forms_post.php
+
+
+FREE TIER LIMITS:
+- $5/month credit (enough for small projects)
+- 500 hours/month execution time
+- MySQL: 1GB storage, 100 hours/month
+- Sleeps after 30 min inactivity (wakes on first request)
+
+TROUBLESHOOTING:
+- Build fails: Make sure "node_modules" is NOT in your repo
+- 500 error: Check Railway logs (click your service → "Deployments" tab → latest → "View Logs")
+- DB connection error: Check environment variables in Step 5
+- 502 error: App is starting, wait 10 seconds and refresh
+- Page not found: Check file paths match the URLs above

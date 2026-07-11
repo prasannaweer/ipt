@@ -244,10 +244,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Get table info
-$tables = $conn->query("SHOW TABLES FROM mit_ipt");
+$dbName = getenv('DB_NAME') ?: getenv('MYSQLDATABASE') ?: 'mit_ipt';
+$tables = $conn->query("SHOW TABLES FROM `$dbName`");
 $tableList = [];
-while ($row = $tables->fetch_assoc()) {
-    $tableList[] = reset($row);
+if ($tables) {
+    while ($row = $tables->fetch_assoc()) {
+        $tableList[] = reset($row);
+    }
 }
 ?>
 <!DOCTYPE html>

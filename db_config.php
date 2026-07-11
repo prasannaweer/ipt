@@ -2,19 +2,36 @@
 // Database Configuration for MIT IPT
 // Works on both WAMP (local) and Railway (cloud)
 
-// Railway sets DB_HOST, DB_USER, DB_PASS, DB_NAME as environment variables
-// WAMP uses these defaults
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'mit_ipt');
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// Railway sets these env vars automatically when you add MySQL
+// WAMP uses the defaults below
+$dbHost = getenv('DB_HOST') ?: getenv('MYSQLHOST') ?: 'localhost';
+$dbUser = getenv('DB_USER') ?: getenv('MYSQLUSER') ?: 'root';
+$dbPass = getenv('DB_PASS') ?: getenv('MYSQLPASSWORD') ?: '';
+$dbName = getenv('DB_NAME') ?: getenv('MYSQLDATABASE') ?: 'mit_ipt';
 
 // Create connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
 
-// Check connection
+// If database doesn't exist, try creating it
 if ($conn->connect_error) {
-    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
+    // Try connecting without database name to create it
+    $conn2 = @new mysqli($dbHost, $dbUser, $dbPass);
+    if (!$conn2->connect_error) {
+        $conn2->query("CREATE DATABASE IF NOT EXISTS `" . $dbName . "`");
+        $conn2->close();
+        // Retry connection
+        $conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
+    }
+}
+
+// Final check
+if ($conn->connect_error) {
+    http_response_code(500);
+    die("<h1>Database Connection Failed</h1><pre>" . htmlspecialchars($conn->connect_error) . "</pre>");
 }
 
 // Set charset
