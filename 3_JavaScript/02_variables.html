@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02 - Variables &amp; Data Types</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Variables &amp; Data Types</h1>
+
+    <h2>1. var, let, const Declarations</h2>
+    <pre>
+var name = "Alice";    // function-scoped, can be reassigned
+let age = 25;          // block-scoped, can be reassigned
+const PI = 3.14159;    // block-scoped, cannot be reassigned
+    </pre>
+
+    <h2>2. Data Types &amp; Examples</h2>
+    <div class="output" id="typeExamples"></div>
+
+    <h2>3. Type Coercion</h2>
+    <div class="output" id="coercionExamples"></div>
+
+    <script>
+        // --- Variable Declarations ---
+        var x = 4;
+        var y = 11;
+        var z = "cat";
+        var q = "17";
+
+        // --- Type Checking ---
+        var output = "";
+        output += "var x = 4;         typeof: " + typeof x + "\n";
+        output += "var y = 11;        typeof: " + typeof y + "\n";
+        output += 'var z = "cat";     typeof: ' + typeof z + "\n";
+        output += 'var q = "17";      typeof: ' + typeof q + "\n";
+        output += "var flag = true;   typeof: " + typeof true + "\n";
+        output += "var empty = null;  typeof: " + typeof null + "\n";
+        output += "var undef;         typeof: " + typeof undef + "\n";
+
+        document.getElementById("typeExamples").textContent = output;
+
+        // --- Type Coercion Examples ---
+        var coerce = "";
+        coerce += "x + y  = " + x + " + " + y + "  = " + (x + y) + "  (number addition)\n";
+        coerce += 'z + x  = "' + z + '" + ' + x + ' = "' + (z + x) + '"  (string concatenation)\n';
+        coerce += 'x + q  = ' + x + ' + "' + q + '" = "' + (x + q) + '"  (string concatenation)\n";
+        coerce += "x - q  = " + x + ' - "' + q + '" = ' + (x - q) + "  (coercion to number)\n";
+        coerce += 'x + "" = ' + x + ' + "" = "' + (x + "") + '"  (number to string)\n';
+        coerce += '"12" - 3 = ' + ("12" - 3) + "\n";
+        coerce += '"12" + 3 = ' + ("12" + 3) + "\n";
+
+        document.getElementById("coercionExamples").textContent = coerce;
+    </script>
+</body>
+</html>

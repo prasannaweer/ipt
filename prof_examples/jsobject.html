@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic JavaScript Object</title>
+</head>
+<body>
+  <h1>Basic JavaScript Object</h1>
+  <pre id="output"></pre>
+
+  <script>
+    const person = {
+      firstName: "Jane",
+      lastName: "Doe",
+      age: 28,
+      email: "jane.doe@example.com",
+      fullName() {
+        return `${this.firstName} ${this.lastName}`;
+      }
+    };
+
+    const output = document.getElementById("output");
+    output.textContent =
+      `Name: ${person.fullName()}\n` +
+      `Age: ${person.age}\n` +
+      `Email: ${person.email}`;
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Basic XML Document Structure -->
+<!--
+    This example shows the fundamental structure of an XML document:
+    - XML declaration (prolog)
+    - Root element containing all other elements
+    - Nested child elements
+-->
+<note>
+    <to>John Smith</to>
+    <from>Jane Doe</from>
+    <date>2026-07-11</date>
+    <subject>Meeting Reminder</subject>
+    <body>
+        Don't forget about the team meeting tomorrow at 10:00 AM.
+        We'll be discussing the project timeline and deliverables.
+    </body>
+    <priority>High</priority>
+</note>

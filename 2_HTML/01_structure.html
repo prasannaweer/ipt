@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 - Basic HTML Structure</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 0.95em; line-height: 1.6; }
+        .note { background: #e3f2fd; border-left: 4px solid #1565c0; padding: 14px 18px; margin-top: 20px; border-radius: 4px; }
+        p { line-height: 1.7; margin: 12px 0; }
+    </style>
+</head>
+<body>
+
+<h1>01 &mdash; Basic HTML Page Structure</h1>
+<p>Every HTML page follows a standard skeleton. Below is the minimal yet complete structure.</p>
+
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;p&gt;This is where you include text and images.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<div class="note">
+    <strong>Key Elements:</strong>
+    <ul>
+        <li><code>&lt;!DOCTYPE html&gt;</code> &mdash; Declares the document as HTML5.</li>
+        <li><code>&lt;html&gt;</code> &mdash; The root element wrapping everything.</li>
+        <li><code>&lt;head&gt;</code> &mdash; Contains metadata, title, and links to stylesheets.</li>
+        <li><code>&lt;meta charset="UTF-8"&gt;</code> &mdash; Sets character encoding for proper text display.</li>
+        <li><code>&lt;meta name="viewport"&gt;</code> &mdash; Ensures responsive design on mobile devices.</li>
+        <li><code>&lt;title&gt;</code> &mdash; Sets the text shown in the browser tab.</li>
+        <li><code>&lt;body&gt;</code> &mdash; Contains all visible content (text, images, links, etc.).</li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+var fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const app = express();
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'mit_ipt'
+});
+
+connection.connect((err) => {
+  if (err) console.error('DB connection error:', err);
+  else console.log('Connected to mit_ipt');
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/example', (req, res) => {
+  let fname = req.body.fname;
+  let index = req.body.index;
+  let math = parseInt(req.body.math);
+  let science = parseInt(req.body.science);
+  let english = parseInt(req.body.english);
+
+  // Save to file
+  let text = fname + " " + index + " " + math + " " + science + " " + english;
+  fs.appendFile('myfile.txt', text + '\n', function(err) {
+    if (err) throw err;
+    console.log('Saved to file!');
+  });
+
+  // Save to database
+  let average = ((math + science + english) / 3).toFixed(2);
+  let grade;
+  if (average >= 80) grade = 'A';
+  else if (average >= 70) grade = 'B';
+  else if (average >= 60) grade = 'C';
+  else if (average >= 50) grade = 'D';
+  else grade = 'F';
+
+  const sql = `INSERT INTO student_grades (name, index_number, maths, english, sciences, average, grade) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  connection.query(sql, [fname, index, math, english, science, average, grade], (err) => {
+    if (err) {
+      res.send('File saved. DB error: ' + err.message);
+      return;
+    }
+    res.send(`Student record saved to file and database!<br>
+      Name: ${fname}<br>Average: ${average}<br>Grade: ${grade}<br>
+      <a href="/">Back</a>`);
+  });
+});
+
+const port = 8081;
+app.listen(port, () => {
+  console.log('FileWrite app running on port ' + port);
+});

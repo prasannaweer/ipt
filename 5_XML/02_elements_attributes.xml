@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    XML Elements and Attributes
+    - Elements: tags that contain data (e.g., <title>...</title>)
+    - Attributes: name="value" pairs inside opening tags (e.g., type="fiction")
+    - Best practice: Use elements for data, attributes for metadata
+-->
+<library name="City Public Library" location="Downtown">
+    <category type="fiction" shelf="A">
+        <book id="B001">
+            <title lang="en">The Great Gatsby</title>
+            <author country="US">F. Scott Fitzgerald</author>
+            <year>1925</year>
+            <price currency="USD">12.99</price>
+            <isbn>978-0743273565</isbn>
+        </book>
+        <book id="B002">
+            <title lang="en">1984</title>
+            <author country="UK">George Orwell</author>
+            <year>1949</year>
+            <price currency="USD">10.99</price>
+            <isbn>978-0451524935</isbn>
+        </book>
+        <book id="B003">
+            <title lang="es">Cien Años de Soledad</title>
+            <author country="CO">Gabriel García Márquez</author>
+            <year>1967</year>
+            <price currency="USD">14.50</price>
+            <isbn>978-0060883287</isbn>
+        </book>
+    </category>
+
+    <category type="reference" shelf="B">
+        <article id="A001">
+            <title>Introduction to XML</title>
+            <journal>Web Technologies Quarterly</journal>
+            <volume>15</volume>
+            <issue>3</issue>
+            <year>2025</year>
+            <pages>45-62</pages>
+        </article>
+        <article id="A002">
+            <title>Data Modeling Best Practices</title>
+            <journal>Computer Science Review</journal>
+            <volume>8</volume>
+            <issue>1</issue>
+            <year>2026</year>
+            <pages>112-130</pages>
+        </article>
+    </category>
+</library>

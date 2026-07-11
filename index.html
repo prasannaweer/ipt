@@ -1,0 +1,4406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIT 219 - Integrative Programming &amp; Technologies</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/php/php.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --surface2: #334155; --border: #475569;
+  --text: #e2e8f0; --text2: #94a3b8; --accent: #38bdf8; --accent2: #818cf8;
+  --green: #34d399; --red: #f87171; --orange: #fb923c; --pink: #f472b6;
+  --yellow: #fbbf24;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+::selection { background: var(--accent); color: var(--bg); }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, #1e1b4b 0%, #0c4a6e 50%, #164e63 100%); padding: 50px 20px; text-align: center; border-bottom: 2px solid var(--accent); position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 50%); animation:pulse 4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+.hero h1 { font-size: 2.4em; font-weight: 800; background: linear-gradient(90deg, var(--accent), var(--accent2), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; }
+.hero p { color: var(--text2); font-size: 1.1em; margin-top: 8px; position: relative; }
+.hero .prof { color: var(--yellow); font-weight: 600; margin-top: 12px; position: relative; }
+
+/* NAV */
+.nav { background: var(--surface); padding: 12px 20px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav button { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: all 0.2s; }
+.nav button:hover, .nav button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+.nav .search-box { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; width: 260px; font-size: 0.9em; outline: none; }
+.nav .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.2); }
+.nav .search-box::placeholder { color: var(--text2); }
+
+/* STATS */
+.stats { display: flex; justify-content: center; gap: 30px; padding: 20px; flex-wrap: wrap; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 25px; text-align: center; min-width: 120px; }
+.stat .num { font-size: 2em; font-weight: 800; color: var(--accent); }
+.stat .label { color: var(--text2); font-size: 0.85em; }
+
+/* CONTAINER */
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+/* MODULE */
+.module { background: var(--surface); border-radius: 14px; margin: 24px 0; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s; }
+.module.hidden { display: none; }
+.module-header { padding: 18px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+.module-header:hover { filter: brightness(1.1); }
+.module-header h2 { font-size: 1.3em; font-weight: 700; color: #fff; }
+.module-header .meta { display: flex; align-items: center; gap: 10px; }
+.badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; background: rgba(255,255,255,0.2); color: #fff; }
+.arrow { font-size: 1em; transition: transform 0.3s; color: #fff; }
+.arrow.open { transform: rotate(180deg); }
+.module-body { padding: 0 24px 24px; display: none; }
+.module-body.active { display: block; }
+.m1 .module-header { background: linear-gradient(135deg, #581c87, #7c3aed); }
+.m2 .module-header { background: linear-gradient(135deg, #c2410c, #ea580c); }
+.m3 .module-header { background: linear-gradient(135deg, #15803d, #22c55e); }
+.m4 .module-header { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+.m5 .module-header { background: linear-gradient(135deg, #be123c, #ef4444); }
+
+/* EXAMPLE */
+.example { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.3s; }
+.example.hidden { display: none; }
+.example-head { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: var(--surface); transition: background 0.2s; border-bottom: 1px solid var(--border); }
+.example-head:hover { background: var(--surface2); }
+.example-head h3 { font-size: 1em; font-weight: 600; }
+.example-head .actions { display: flex; gap: 6px; }
+.example-head .actions button, .example-head .actions a { padding: 5px 10px; border-radius: 6px; font-size: 0.78em; font-weight: 600; cursor: pointer; text-decoration: none; border: none; transition: all 0.2s; }
+.btn-run { background: var(--green); color: var(--bg); }
+.btn-run:hover { filter: brightness(1.2); }
+.btn-view { background: var(--accent); color: var(--bg); }
+.btn-view:hover { filter: brightness(1.2); }
+.btn-code { background: var(--surface2); color: var(--text); border: 1px solid var(--border) !important; }
+.btn-code:hover { background: var(--border); }
+.example-body { padding: 16px 18px; display: none; }
+.example-body.active { display: block; }
+
+/* DESCRIPTIONS */
+.desc { color: var(--text2); margin-bottom: 12px; line-height: 1.7; }
+.desc strong { color: var(--text); }
+.desc code { background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-size: 0.88em; color: var(--accent); font-family: 'Cascadia Code', 'Fira Code', monospace; }
+.process { background: rgba(56,189,248,0.08); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 10px 0; }
+.process h4 { color: var(--accent); font-size: 0.9em; margin-bottom: 4px; }
+.process p { color: var(--text2); font-size: 0.9em; }
+
+/* CODE EDITOR */
+.editor-wrap { margin: 12px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.editor-label { background: var(--surface2); padding: 6px 14px; font-size: 0.78em; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+.editor-wrap .CodeMirror { height: auto; max-height: 400px; font-size: 0.88em; font-family: 'Cascadia Code', 'Fira Code', monospace; }
+.output-wrap { margin: 10px 0; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+.output-label { background: var(--green); color: var(--bg); padding: 6px 14px; font-size: 0.78em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.output-area { background: #0a0a1a; color: var(--green); padding: 14px; font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.88em; min-height: 40px; white-space: pre-wrap; border-radius: 0 0 8px 8px; }
+.output-area.error { color: var(--red); background: #1a0000; border: 1px solid var(--red); }
+.output-area:empty::before { content: 'Click Run to see output...'; color: var(--text2); opacity: 0.5; font-style: italic; }
+.preview-area { background: #fff; min-height: 80px; padding: 14px; color: #333; border-radius: 0 0 8px 8px; }
+.preview-area iframe { width: 100%; border: none; min-height: 100px; border-radius: 4px; }
+
+/* TABLES */
+.data-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
+.data-table th { background: var(--surface2); color: var(--accent); padding: 10px 14px; text-align: left; font-weight: 600; border: 1px solid var(--border); }
+.data-table td { padding: 10px 14px; border: 1px solid var(--border); }
+.data-table tr:hover td { background: rgba(56,189,248,0.05); }
+
+/* FLOW DIAGRAM */
+.flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 12px 0; }
+.flow-step { background: var(--surface2); padding: 8px 14px; border-radius: 8px; font-size: 0.85em; font-weight: 600; color: var(--text); border: 1px solid var(--border); }
+.flow-arrow { color: var(--accent); font-size: 1.2em; padding: 0 6px; }
+
+/* TABS */
+.tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 12px; }
+.tab-btn { padding: 10px 18px; background: none; border: none; color: var(--text2); cursor: pointer; font-weight: 600; font-size: 0.9em; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* KEY CONCEPTS */
+.concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.concept-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+.concept-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.concept-card .icon { font-size: 1.8em; margin-bottom: 6px; }
+.concept-card h5 { color: var(--text); font-size: 0.9em; margin-bottom: 4px; }
+.concept-card p { color: var(--text2); font-size: 0.78em; }
+
+/* FOOTER */
+.footer { text-align: center; padding: 30px 20px; color: var(--text2); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.6em; }
+  .nav { gap: 4px; }
+  .nav button { padding: 6px 10px; font-size: 0.8em; }
+  .stats { gap: 10px; }
+  .concept-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1><i class="fas fa-code"></i> MIT 219 - Integrative Programming</h1>
+  <p>Interactive Implementation Guide - All Course Examples</p>
+  
+</div>
+
+<nav class="nav">
+  <button class="active" onclick="filterModule('all', this)"><i class="fas fa-globe"></i> All</button>
+  <button onclick="filterModule('m1', this)"><i class="fas fa-info-circle"></i> Intro</button>
+  <button onclick="filterModule('m2', this)"><i class="fas fa-file-code"></i> HTML</button>
+  <button onclick="filterModule('m3', this)"><i class="fab fa-js-square"></i> JavaScript</button>
+  <button onclick="filterModule('m4', this)"><i class="fab fa-php"></i> PHP</button>
+  <button onclick="filterModule('m5', this)"><i class="fas fa-database"></i> XML</button>
+  <button onclick="filterModule('m6', this)" style="background: linear-gradient(135deg, #854d0e, #ca8a04); color: #fff;"><i class="fas fa-chalkboard-teacher"></i> Lectures</button>
+  <button onclick="filterModule('m7', this)" style="background: linear-gradient(135deg, #581c87, #7c3aed); color: #fff;"><i class="fas fa-database"></i> Database</button>
+  <button onclick="filterModule('m8', this)" style="background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff;"><i class="fas fa-terminal"></i> How to Run</button>
+  <input class="search-box" type="text" placeholder="Search examples..." oninput="searchExamples(this.value)">
+</nav>
+
+<div class="stats">
+  <div class="stat"><div class="num">8</div><div class="label">Modules</div></div>
+  <div class="stat"><div class="num">80+</div><div class="label">Examples</div></div>
+  <div class="stat"><div class="num">4</div><div class="label">Technologies</div></div>
+  <div class="stat"><div class="num">50+</div><div class="label">Live Editors</div></div>
+</div>
+
+<div class="container">
+
+<!-- ========== MODULE 1: INTRO ========== -->
+<div class="module m1" data-module="m1">
+  <div class="module-header" onclick="toggleModule(this)">
+    <h2><i class="fas fa-lightbulb"></i> Module 1: Introduction to Integrative Programming</h2>
+    <div class="meta"><span class="badge">Theory</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+    <div class="concept-grid">
+      <div class="concept-card"><div class="icon">🔗</div><h5>Integration</h5><p>Combining existing software components into complete systems</p></div>
+      <div class="concept-card"><div class="icon">🖥️</div><h5>Presentation Model</h5><p>Interface to communicate with legacy apps</p></div>
+      <div class="concept-card"><div class="icon">📊</div><h5>Data Model</h5><p>Access data managed by other software</p></div>
+      <div class="concept-card"><div class="icon">⚙️</div><h5>Functional Model</h5><p>Invoke functions from other applications</p></div>
+    </div>
+    <div class="process">
+      <h4>Middleware Types</h4>
+      <div class="flow">
+        <span class="flow-step">Transaction-oriented</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Message-oriented</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Object-oriented</span>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-label">Key Architectures Comparison</div>
+      <div style="padding:14px">
+        <table class="data-table">
+          <tr><th>Architecture</th><th>Platform</th><th>Language</th><th>Format</th></tr>
+          <tr><td>CORBA</td><td>Any</td><td>Java, C++, Python</td><td>IDL → Binary</td></tr>
+          <tr><td>DCOM</td><td>Windows</td><td>C++, VB</td><td>Binary (OLE)</td></tr>
+          <tr><td>REST</td><td>Any (HTTP)</td><td>Any</td><td>JSON / XML</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODULE 2: HTML ========== -->
+<div class="module m2" data-module="m2">
+  <div class="module-header" onclick="toggleModule(this)">
+    <h2><i class="fas fa-file-code"></i> Module 2: HTML</h2>
+    <div class="meta"><span class="badge">12 Examples</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <!-- HTML Structure -->
+    <div class="example" data-example="html structure basic">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>01 - Basic HTML Structure</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/01_structure.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Every HTML page uses <code>&lt;HTML&gt;</code>, <code>&lt;HEAD&gt;</code>, <code>&lt;TITLE&gt;</code>, and <code>&lt;BODY&gt;</code> tags.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor - Edit & Run</div>
+          <div class="editor" data-lang="htmlmixed">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  &lt;p&gt;Welcome to HTML.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+        <div class="process">
+          <div class="flow">
+            <span class="flow-step">Browser reads HTML</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Parses tags</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Renders content</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Tags -->
+    <div class="example" data-example="text formatting bold italic tags">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>02 - Text Formatting Tags</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/02_tags.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Tags: <code>&lt;B&gt;</code> Bold, <code>&lt;I&gt;</code> Italic, <code>&lt;U&gt;</code> Underline, <code>&lt;P&gt;</code> Paragraph, <code>&lt;sub&gt;</code> Subscript, <code>&lt;sup&gt;</code> Superscript, <code>&lt;HR&gt;</code> Line, <code>&lt;BR&gt;</code> Break</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h1&gt;&lt;I&gt;The Nation&lt;/I&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;B&gt;Bold Text&lt;/B&gt;&lt;/p&gt;
+&lt;p&gt;&lt;I&gt;Italic Text&lt;/I&gt;&lt;/p&gt;
+&lt;p&gt;&lt;U&gt;Underlined Text&lt;/U&gt;&lt;/p&gt;
+&lt;p&gt;Water: H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
+&lt;p&gt;E=mc&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Line 1&lt;br&gt;Line 2&lt;/p&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS Styles -->
+    <div class="example" data-example="css inline styles color background">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>03 - CSS Styles (Inline & Internal)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/03_styles.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Three types: <strong>Inline</strong> (style attribute), <strong>Internal</strong> (style element in head), <strong>External</strong> (link to .css file)</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;body style="background-color:powderblue;"&gt;
+  &lt;h1 style="color:Tomato;"&gt;Colored Heading&lt;/h1&gt;
+  &lt;p style="text-align:center; font-size:18px;"&gt;
+    Centered paragraph with custom font size
+  &lt;/p&gt;
+  &lt;p style="color:green; font-weight:bold;"&gt;
+    Green bold text
+  &lt;/p&gt;
+&lt;/body&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External CSS -->
+    <div class="example" data-example="css external stylesheet link">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>04 - External CSS</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/04_css_external.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Link external stylesheet with <code>&lt;link rel="stylesheet" href="styles.css"&gt;</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;head&gt;
+  &lt;style&gt;
+    body { background-color: powderblue; }
+    h1 { color: blue; }
+    p { color: red; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Blue Heading&lt;/h1&gt;
+  &lt;p&gt;Red paragraph text&lt;/p&gt;
+&lt;/body&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Headings -->
+    <div class="example" data-example="headings h1 h2 h3 alignment">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>05 - Headings & Alignment</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/05_headings.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Headings <code>&lt;H1&gt;</code> to <code>&lt;H6&gt;</code> (largest to smallest). Use <code>ALIGN=CENTER</code>. Comments: <code>&lt;!-- ... --&gt;</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h1&gt;Heading 1 (Largest)&lt;/h1&gt;
+&lt;h2&gt;Heading 2&lt;/h2&gt;
+&lt;h3&gt;Heading 3&lt;/h3&gt;
+&lt;h4&gt;Heading 4&lt;/h4&gt;
+&lt;h5&gt;Heading 5&lt;/h5&gt;
+&lt;h6&gt;Heading 6 (Smallest)&lt;/h6&gt;
+&lt;h2 align="center"&gt;Centered Heading&lt;/h2&gt;
+&lt;h2 align="right"&gt;Right Aligned&lt;/h2&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Images & Links -->
+    <div class="example" data-example="images links anchor href img">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>06 - Images & Links</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/06_images_links.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">
+          <strong>Images:</strong> <code>&lt;IMG SRC="url" WIDTH="w" HEIGHT="h" ALT="text"&gt;</code><br>
+          <strong>Links:</strong> <code>&lt;A HREF="http://site.com"&gt;Click&lt;/A&gt;</code><br>
+          <strong>Email:</strong> <code>&lt;A HREF="mailto:user@site.com"&gt;Email&lt;/A&gt;</code><br>
+          <strong>Anchors:</strong> <code>&lt;A NAME="section"&gt;</code> + <code>&lt;A HREF="#section"&gt;</code>
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h2&gt;Links Demo&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://google.com" target="_blank"&gt;Visit Google&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="mailto:test@example.com"&gt;Send Email&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Image Demo&lt;/h2&gt;
+&lt;img src="https://via.placeholder.com/150" alt="Placeholder" width="150"&gt;
+&lt;hr&gt;
+&lt;h2 id="top"&gt;Page Top&lt;/h2&gt;
+&lt;p&gt;Long content here...&lt;/p&gt;
+&lt;p&gt;&lt;a href="#top"&gt;Back to Top&lt;/a&gt;&lt;/p&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lists -->
+    <div class="example" data-example="lists ordered unordered ol ul">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>07 - Lists</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/07_lists.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><strong>Ordered:</strong> <code>&lt;OL&gt;</code> (A, a, I, i) | <strong>Unordered:</strong> <code>&lt;UL&gt;</code> (disc, circle, square)</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h3&gt;Unordered List&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Apple&lt;/li&gt;
+  &lt;li&gt;Banana&lt;/li&gt;
+  &lt;li&gt;Cherry&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Ordered List (Type A)&lt;/h3&gt;
+&lt;ol type="A"&gt;
+  &lt;li&gt;First&lt;/li&gt;
+  &lt;li&gt;Second&lt;/li&gt;
+  &lt;li&gt;Third&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Nested List&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fruits
+    &lt;ul&gt;
+      &lt;li&gt;Apple&lt;/li&gt;
+      &lt;li&gt;Mango&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Vegetables&lt;/li&gt;
+&lt;/ul&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forms -->
+    <div class="example" data-example="forms input select submit method action">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>08 - Forms</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/08_forms.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Form shell: <code>&lt;FORM METHOD=POST ACTION="script"&gt;</code> | Elements: Text, Textarea, Radio, Checkbox, Select, Submit</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;form method="POST" action="#"&gt;
+  &lt;h3&gt;Registration Form&lt;/h3&gt;
+  &lt;p&gt;Name: &lt;input type="text" name="fname" placeholder="Your name"&gt;&lt;/p&gt;
+  &lt;p&gt;Email: &lt;input type="email" name="email" placeholder="Email"&gt;&lt;/p&gt;
+  &lt;p&gt;Gender:&lt;br&gt;
+    &lt;input type="radio" name="gender" value="M"&gt; Male
+    &lt;input type="radio" name="gender" value="F"&gt; Female
+  &lt;/p&gt;
+  &lt;p&gt;Fruit:&lt;br&gt;
+    &lt;select name="fruit"&gt;
+      &lt;option value="mango"&gt;MANGO&lt;/option&gt;
+      &lt;option value="apple"&gt;APPLE&lt;/option&gt;
+      &lt;option value="banana"&gt;BANANA&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/p&gt;
+  &lt;p&gt;&lt;input type="checkbox" name="agree"&gt; I agree&lt;/p&gt;
+  &lt;p&gt;&lt;textarea name="msg" rows="3" cols="30"&gt;Message...&lt;/textarea&gt;&lt;/p&gt;
+  &lt;p&gt;
+    &lt;input type="submit" value="Submit"&gt;
+    &lt;input type="reset" value="Reset"&gt;
+  &lt;/p&gt;
+&lt;/form&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="example" data-example="tables tr td th colspan rowspan">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>09 - Tables</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/09_tables.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">
+          <code>&lt;TABLE&gt;</code>, <code>&lt;TR&gt;</code> (row), <code>&lt;TD&gt;</code> (cell), <code>&lt;TH&gt;</code> (header)<br>
+          <code>COLSPAN=n</code> spans columns, <code>ROWSPAN=n</code> spans rows
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;table border="1" cellpadding="8" cellspacing="0"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Age&lt;/th&gt;&lt;th&gt;City&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Alice&lt;/td&gt;&lt;td&gt;22&lt;/td&gt;&lt;td&gt;Colombo&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Bob&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;Kandy&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;Charlie &amp; Dave&lt;/td&gt;
+      &lt;td&gt;Galle&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan="2"&gt;Eve&lt;/td&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;Jaffna&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;31&lt;/td&gt;
+      &lt;td&gt;Negombo&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <div class="example" data-example="bootstrap responsive framework container">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>10 - Bootstrap 5</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="2_HTML/10_bootstrap.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Responsive framework. Classes: <code>p-5</code> (padding), <code>my-5</code> (margin), <code>bg-dark</code>, <code>text-white</code>, <code>border</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+&lt;div class="container mt-4"&gt;
+  &lt;div class="p-5 bg-dark text-white text-center rounded"&gt;
+    &lt;h1&gt;Bootstrap Header&lt;/h1&gt;
+    &lt;p class="lead"&gt;Responsive design made easy&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="row mt-3"&gt;
+    &lt;div class="col-md-4 p-3 bg-primary text-white rounded"&gt;Column 1&lt;/div&gt;
+    &lt;div class="col-md-4 p-3 bg-success text-white rounded"&gt;Column 2&lt;/div&gt;
+    &lt;div class="col-md-4 p-3 bg-danger text-white rounded"&gt;Column 3&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 3: JAVASCRIPT ========== -->
+<div class="module m3" data-module="m3">
+  <div class="module-header" onclick="toggleModule(this)">
+    <h2><i class="fab fa-js-square"></i> Module 3: JavaScript</h2>
+    <div class="meta"><span class="badge">14 Examples</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <!-- Hello World -->
+    <div class="example" data-example="hello world alert document write innerhtml">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>01 - Hello World & Outputs</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/01_hello_world.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Three output methods: <code>document.write()</code>, <code>innerHTML</code>, <code>window.alert()</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Method 1: document.write
+document.write("&lt;h2&gt;Hello via document.write!&lt;/h2&gt;");
+
+// Method 2: console.log
+console.log("Hello via console.log!");
+
+// Method 3: alert (uncomment to see)
+// alert("Hello via alert!");
+
+// Method 4: innerHTML (use with an element)
+// document.getElementById("demo").innerHTML = "Hello!";</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="example" data-example="variables let var const data types string number">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>02 - Variables & Data Types</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/02_variables.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>var</code> (global), <code>let</code> (block), <code>const</code> (block, no reassign). Types: Number, String, Boolean, Array, Object</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Variable declarations
+var x = 5;          // number
+let y = "Hello";    // string
+const z = true;     // boolean
+
+// Type checking
+console.log("x = " + x + " (type: " + typeof x + ")");
+console.log("y = " + y + " (type: " + typeof y + ")");
+console.log("z = " + z + " (type: " + typeof z + ")");
+
+// String concatenation trap
+var num = 4;
+var str = "cat";
+console.log("num + num = " + (num + 11));      // 15
+console.log("str + num = " + (str + num));     // "cat4"
+
+// var vs let
+var a = 1;
+var a = 2;    // OK - var allows redeclaration
+let b = 1;
+// let b = 2;  // ERROR - let doesn't allow redeclaration</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operators -->
+    <div class="example" data-example="operators arithmetic assignment comparison logical">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>03 - Operators</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/03_operators.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">
+          <table class="data-table">
+            <tr><th>Type</th><th>Operators</th></tr>
+            <tr><td>Arithmetic</td><td><code>+ - * / % ++ --</code></td></tr>
+            <tr><td>Assignment</td><td><code>= += -= *= /=</code></td></tr>
+            <tr><td>Comparison</td><td><code>== != === !== &gt; &lt; &gt;= &lt;=</code></td></tr>
+            <tr><td>Logical</td><td><code>&amp;&amp; || !</code></td></tr>
+          </table>
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Arithmetic
+console.log("10 + 3 =", 10 + 3);
+console.log("10 - 3 =", 10 - 3);
+console.log("10 * 3 =", 10 * 3);
+console.log("10 / 3 =", (10 / 3).toFixed(2));
+console.log("10 % 3 =", 10 % 3);
+
+// Prefix vs Postfix
+let x = 5;
+console.log("x++ =", x++, "then x =", x);  // 5, then 6
+console.log("++x =", ++x);                    // 7
+
+// Comparison
+console.log("5 == '5':", 5 == '5');    // true (loose)
+console.log("5 === '5':", 5 === '5');  // false (strict)
+console.log("5 != '5':", 5 != '5');    // false
+console.log("5 !== '5':", 5 !== '5');  // true
+
+// Logical
+let a = true, b = false;
+console.log("true && false:", a && b);
+console.log("true || false:", a || b);
+console.log("!true:", !a);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Structures -->
+    <div class="example" data-example="control structures if else switch conditional">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>04 - Control Structures</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/04_control_structures.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>if / else if / else</code> for decisions, <code>switch</code> for multiple cases</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// if-else
+let hour = new Date().getHours();
+if (hour < 12) {
+  console.log("Good Morning!");
+} else if (hour < 18) {
+  console.log("Good Afternoon!");
+} else {
+  console.log("Good Evening!");
+}
+
+// switch
+let day = "Monday";
+switch (day) {
+  case "Monday":
+    console.log("Start of work week");
+    break;
+  case "Friday":
+    console.log("TGIF!");
+    break;
+  case "Saturday":
+  case "Sunday":
+    console.log("Weekend!");
+    break;
+  default:
+    console.log("Regular day");
+}</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loops -->
+    <div class="example" data-example="loops for while do sum 1 100">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>05 - Loops</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/05_loops.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><strong>while:</strong> condition-based | <strong>for:</strong> counter-based | <strong>for...of:</strong> iterate values</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Sum all numbers 1 to 100
+let sum = 0;
+for (let i = 1; i <= 100; i++) sum += i;
+console.log("Sum 1-100:", sum);  // 5050
+
+// Sum odd numbers
+let oddSum = 0;
+for (let i = 1; i <= 100; i += 2) oddSum += i;
+console.log("Odd sum:", oddSum);  // 2500
+
+// While loop
+let n = 1;
+while (n <= 5) {
+  console.log("while:", n);
+  n++;
+}
+
+// For...of (arrays)
+let colors = ["Red", "Green", "Blue"];
+for (let c of colors) {
+  console.log("Color:", c);
+}</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrays -->
+    <div class="example" data-example="arrays push pop shift unshift methods">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>06 - Arrays</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/06_arrays.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Methods: <code>push, pop, shift, unshift, join, splice, slice, concat, flat, forEach</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">const fruits = ["Banana", "Orange", "Apple"];
+console.log("Original:", fruits);
+
+fruits.push("Mango");
+console.log("After push:", fruits);
+
+fruits.pop();
+console.log("After pop:", fruits);
+
+fruits.unshift("Strawberry");
+console.log("After unshift:", fruits);
+
+fruits.shift();
+console.log("After shift:", fruits);
+
+console.log("Length:", fruits.length);
+console.log("Joined:", fruits.join(", "));
+console.log("Index of Apple:", fruits.indexOf("Apple"));
+
+// forEach
+fruits.forEach((f, i) => console.log(i + ": " + f));
+
+// map
+let upper = fruits.map(f => f.toUpperCase());
+console.log("Uppercase:", upper);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functions -->
+    <div class="example" data-example="functions declaration expression arrow return">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>07 - Functions</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/07_functions.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Define with <code>function</code> keyword, pass arguments, return result</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Function declaration
+function square(x) {
+  return x * x;
+}
+
+function sum(a, b) {
+  return a + b;
+}
+
+function sumOfSquares(a, b) {
+  return square(a) + square(b);
+}
+
+console.log("square(5):", square(5));
+console.log("sum(3, 4):", sum(3, 4));
+console.log("sumOfSquares(3, 4):", sumOfSquares(3, 4));
+
+// Arrow function
+const multiply = (a, b) => a * b;
+console.log("multiply(6, 7):", multiply(6, 7));
+
+// Default parameters
+function greet(name = "World") {
+  return "Hello, " + name + "!";
+}
+console.log(greet());
+console.log(greet("Alice"));</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exception Handling -->
+    <div class="example" data-example="exception handling try catch throw finally">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>08 - Exception Handling</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/08_exception_handling.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>try</code> runs code, <code>catch</code> handles errors, <code>throw</code> raises custom errors, <code>finally</code> always runs</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">function validateNumber(input) {
+  try {
+    if (input === "" || input === null) throw "Empty input";
+    let num = Number(input);
+    if (isNaN(num)) throw "Not a number";
+    if (num < 1) throw "Too low (min: 1)";
+    if (num > 100) throw "Too high (max: 100)";
+    console.log("Valid: " + num);
+  } catch (err) {
+    console.log("Error: " + err);
+  } finally {
+    console.log("--- Validation complete ---");
+  }
+}
+
+validateNumber("42");    // Valid
+validateNumber("");       // Empty
+validateNumber("abc");    // Not a number
+validateNumber(200);      // Too high
+validateNumber(5);        // Valid</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOM, Objects, JSON, Classes -->
+    <div class="example" data-example="dom objects json classes inheritance constructor">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>09 - DOM, Objects, JSON & Classes</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/09_dom_objects.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><strong>Objects:</strong> <code>{key: value}</code> | <strong>JSON:</strong> <code>JSON.parse/stringify</code> | <strong>Classes:</strong> <code>class Name { constructor(){} }</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Objects
+const person = { firstName: "John", age: 50, city: "NYC" };
+console.log("Person:", person.firstName, person.age);
+
+// JSON
+let jsonStr = JSON.stringify(person);
+console.log("JSON string:", jsonStr);
+let parsed = JSON.parse(jsonStr);
+console.log("Parsed:", parsed.firstName);
+
+// Class
+class Car {
+  constructor(name) { this.name = name; }
+  drive() { return this.name + " is driving"; }
+}
+
+class Tesla extends Car {
+  constructor(name, battery) {
+    super(name);
+    this.battery = battery;
+  }
+  autopilot() { return this.name + " is on autopilot"; }
+}
+
+const myCar = new Tesla("Model 3", "75kWh");
+console.log(myCar.drive());
+console.log(myCar.autopilot());
+console.log("Battery:", myCar.battery);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node.js Server -->
+    <div class="example" data-example="nodejs express server post route">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>10 - Node.js & Express Server</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/10_nodejs_server.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Node.js server using Express framework with body-parser middleware</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Code (runs on Node.js)</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
+app.post('/process-marks', (req, res) => {
+  const name = req.body.studentName;
+  const m1 = parseFloat(req.body.mark1);
+  const m2 = parseFloat(req.body.mark2);
+  const avg = (m1 + m2) / 2;
+  res.send(`Hello ${name}, average: ${avg}`);
+});
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});</div>
+        </div>
+        <div class="process">
+          <div class="flow">
+            <span class="flow-step">npm init</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">npm install express body-parser</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">node server.js</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">localhost:3000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node.js Form -->
+    <div class="example" data-example="nodejs form html post">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>11 - Node.js Form (HTML)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/10_nodejs_form.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">HTML form that POSTs to the Express server for processing</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;form action="http://localhost:3000/process-marks" method="POST"&gt;
+  &lt;h3&gt;Student Marks Form&lt;/h3&gt;
+  &lt;p&gt;Name: &lt;input type="text" name="studentName" required&gt;&lt;/p&gt;
+  &lt;p&gt;Mark 1: &lt;input type="number" name="mark1" min="0" max="100" required&gt;&lt;/p&gt;
+  &lt;p&gt;Mark 2: &lt;input type="number" name="mark2" min="0" max="100" required&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;input type="submit" value="Calculate Average"&gt;&lt;/p&gt;
+&lt;/form&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Operations -->
+    <div class="example" data-example="nodejs fs file read write append">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>12 - File Operations (fs module)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/11_file_operations.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>fs.readFile()</code> Read, <code>fs.writeFile()</code> Write, <code>fs.appendFile()</code> Append</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Code (runs on Node.js)</div>
+          <div class="editor" data-lang="javascript">const fs = require('fs');
+
+// Write file
+fs.writeFile('example.txt', 'Hello World!', (err) => {
+  if (err) throw err;
+  console.log('File written!');
+});
+
+// Read file
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log('Content:', data);
+});
+
+// Append to file
+fs.appendFile('example.txt', '\nNew line!', (err) => {
+  if (err) throw err;
+  console.log('Appended!');
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MySQL -->
+    <div class="example" data-example="mysql database nodejs query connection">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>13 - MySQL Integration</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/12_mysql_example.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Connect to MySQL database, create tables, insert and query data</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Code (runs on Node.js)</div>
+          <div class="editor" data-lang="javascript">var mysql = require('mysql');
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "mydb"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
+// Create table
+con.query("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), age INT)", function(err, result) {
+  if (err) throw err;
+  console.log("Table created!");
+});
+
+// Insert
+con.query("INSERT INTO users (name, age) VALUES ('John', 30)", function(err, result) {
+  if (err) throw err;
+  console.log("Inserted! ID:", result.insertId);
+});
+
+// Select
+con.query("SELECT * FROM users", function(err, result) {
+  if (err) throw err;
+  console.log("Users:", result);
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Validation -->
+    <div class="example" data-example="form validation preventdefault event error success">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>14 - Form Validation</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="3_JavaScript/13_form_validation.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Uses <code>event.preventDefault()</code> to stop page reload and validate fields</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;style&gt;
+  .err { color: red; font-size: 0.85em; }
+  .ok { color: green; font-size: 0.85em; }
+  .field { margin: 10px 0; }
+  label { display: inline-block; width: 80px; }
+&lt;/style&gt;
+&lt;form id="myForm"&gt;
+  &lt;h3&gt;Registration Form&lt;/h3&gt;
+  &lt;div class="field"&gt;
+    &lt;label&gt;Name:&lt;/label&gt;
+    &lt;input type="text" id="name" required&gt;
+    &lt;span id="nameErr" class="err"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;label&gt;Email:&lt;/label&gt;
+    &lt;input type="text" id="email" required&gt;
+    &lt;span id="emailErr" class="err"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;label&gt;Password:&lt;/label&gt;
+    &lt;input type="password" id="pwd" required&gt;
+    &lt;span id="pwdErr" class="err"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;p id="result"&gt;&lt;/p&gt;
+  &lt;button type="submit"&gt;Register&lt;/button&gt;
+&lt;/form&gt;
+&lt;script&gt;
+document.getElementById("myForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let valid = true;
+  document.getElementById("nameErr").textContent = "";
+  document.getElementById("emailErr").textContent = "";
+  document.getElementById("pwdErr").textContent = "";
+
+  let name = document.getElementById("name").value;
+  if (name.length &lt; 3) {
+    document.getElementById("nameErr").textContent = "Name must be 3+ chars";
+    valid = false;
+  }
+
+  let email = document.getElementById("email").value;
+  if (!email.includes("@")) {
+    document.getElementById("emailErr").textContent = "Invalid email";
+    valid = false;
+  }
+
+  let pwd = document.getElementById("pwd").value;
+  if (pwd.length &lt; 6) {
+    document.getElementById("pwdErr").textContent = "Password must be 6+ chars";
+    valid = false;
+  }
+
+  if (valid) {
+    document.getElementById("result").textContent = "Registration successful!";
+    document.getElementById("result").className = "ok";
+  }
+});
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 4: PHP ========== -->
+<div class="module m4" data-module="m4">
+  <div class="module-header" onclick="toggleModule(this)">
+    <h2><i class="fab fa-php"></i> Module 4: PHP</h2>
+    <div class="meta"><span class="badge">10 Examples</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <!-- Hello World -->
+    <div class="example" data-example="hello world php echo comments">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>01 - Hello World & Comments</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/01_hello_world.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>&lt;?php ?&gt;</code> tags, <code>//</code> single line, <code>/* */</code> multi-line, <code>echo</code> outputs</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+// Single line comment
+/* Multi-line comment */
+
+echo "Hello World!&lt;br&gt;";
+echo "Today is: " . date("Y-m-d") . "&lt;br&gt;";
+
+$name = "PHP Student";
+echo "Welcome, $name!";
+?&gt;</div>
+        </div>
+        <div class="process">
+          <div class="flow">
+            <span class="flow-step">Browser requests .php</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Server executes PHP</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Generates HTML</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Sends to browser</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="example" data-example="php variables dollar sign concatenation">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>02 - Variables</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/02_variables.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">All variables start with <code>$</code>. Auto-typed. Concatenation with <code>.</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+$name = "John";       // string
+$age = 25;            // integer
+$pi = 3.14;           // float
+$active = true;       // boolean
+
+$greeting = "Hello, " . $name . "!";
+echo "$greeting&lt;br&gt;";
+echo "Age: $age&lt;br&gt;";
+echo "Pi: $pi&lt;br&gt;";
+echo "Type of name: " . gettype($name) . "&lt;br&gt;";
+echo "Type of age: " . gettype($age);
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operators -->
+    <div class="example" data-example="php operators arithmetic comparison logical assignment">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>03 - Operators</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/03_operators.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Arithmetic: <code>+ - * / %</code> | Assignment: <code>= += -=</code> | Comparison: <code>== === != !==</code> | Logical: <code>&& || !</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+$a = 10; $b = 3;
+
+echo "Arithmetic:&lt;br&gt;";
+echo "$a + $b = " . ($a + $b) . "&lt;br&gt;";
+echo "$a - $b = " . ($a - $b) . "&lt;br&gt;";
+echo "$a * $b = " . ($a * $b) . "&lt;br&gt;";
+echo "$a / $b = " . round($a / $b, 2) . "&lt;br&gt;";
+echo "$a % $b = " . ($a % $b) . "&lt;br&gt;&lt;br&gt;";
+
+echo "Comparison:&lt;br&gt;";
+echo "10 == '10': " . var_export(10 == '10', true) . "&lt;br&gt;";
+echo "10 === '10': " . var_export(10 === '10', true) . "&lt;br&gt;";
+echo "10 == 10: " . var_export(10 == 10, true);
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conditionals -->
+    <div class="example" data-example="php conditionals if elseif else switch">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>04 - Conditionals</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/04_conditionals.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>if / elseif / else</code> and <code>switch</code> for conditional logic</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+$day = date("l");
+echo "Today is: $day&lt;br&gt;&lt;br&gt;";
+
+if ($day == "Friday") {
+  echo "Have a nice weekend!";
+} elseif ($day == "Sunday") {
+  echo "Have a nice Sunday!";
+} else {
+  echo "Have a nice day!";
+}
+
+echo "&lt;br&gt;&lt;br&gt;Switch example:&lt;br&gt;";
+switch ($day) {
+  case "Monday":
+    echo "Start of work week";
+    break;
+  case "Saturday":
+  case "Sunday":
+    echo "Weekend!";
+    break;
+  default:
+    echo "Regular work day";
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrays -->
+    <div class="example" data-example="php arrays numeric associative multidimensional">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>05 - Arrays</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/05_arrays.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><strong>Numeric:</strong> <code>$arr = ["a", "b"]</code> | <strong>Associative:</strong> <code>["key" => "val"]</code> | <strong>Multidimensional:</strong> arrays in arrays</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+// Numeric array
+$fruits = ["Apple", "Banana", "Cherry"];
+echo "Fruits: " . implode(", ", $fruits) . "&lt;br&gt;";
+echo "First: $fruits[0]&lt;br&gt;&lt;br&gt;";
+
+// Associative array
+$student = ["name" => "Alice", "age" => 22, "gpa" => 3.8];
+foreach ($student as $key => $val) {
+  echo "$key: $val&lt;br&gt;";
+}
+
+echo "&lt;br&gt;Multidimensional:&lt;br&gt;";
+$matrix = [[1, 2], [3, 4], [5, 6]];
+foreach ($matrix as $row) {
+  echo implode(" | ", $row) . "&lt;br&gt;";
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loops -->
+    <div class="example" data-example="php loops while for foreach do">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>06 - Loops</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/06_loops.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>while</code>, <code>do...while</code>, <code>for</code>, <code>foreach</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+// For loop
+echo "For loop (1-5):&lt;br&gt;";
+for ($i = 1; $i &lt;= 5; $i++) {
+  echo $i . " ";
+}
+
+echo "&lt;br&gt;&lt;br&gt;Foreach loop:&lt;br&gt;";
+$colors = ["Red", "Green", "Blue"];
+foreach ($colors as $color) {
+  echo "• $color&lt;br&gt;";
+}
+
+echo "&lt;br&gt;While loop:&lt;br&gt;";
+$j = 1;
+while ($j &lt;= 5) {
+  echo $j . " ";
+  $j++;
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functions -->
+    <div class="example" data-example="php functions parameters return default">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>07 - Functions</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/07_functions.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Define with <code>function</code>, default parameters with <code>=</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+function greet($name, $greeting = "Hello") {
+  return "$greeting, $name!";
+}
+
+function add($a, $b) {
+  return $a + $b;
+}
+
+function isEven($num) {
+  return $num % 2 === 0;
+}
+
+echo greet("World") . "&lt;br&gt;";
+echo greet("John", "Hi") . "&lt;br&gt;";
+echo "3 + 4 = " . add(3, 4) . "&lt;br&gt;";
+echo "Is 7 even? " . (isEven(7) ? "Yes" : "No") . "&lt;br&gt;";
+echo "Is 8 even? " . (isEven(8) ? "Yes" : "No");
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forms GET -->
+    <div class="example" data-example="php forms get request url query string">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>08 - Forms with GET</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/08_forms_get.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">GET: data in URL, <code>$_GET['field']</code> to access. Max ~100 chars.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+if ($_SERVER["REQUEST_METHOD"] == "GET" &amp;&amp; isset($_GET["name"])) {
+  $name = htmlspecialchars($_GET["name"]);
+  $color = htmlspecialchars($_GET["color"]);
+  echo "&lt;h2&gt;Hello, $name!&lt;/h2&gt;";
+  echo "&lt;p&gt;Favorite color: $color&lt;/p&gt;";
+} else {
+?&gt;
+&lt;form method="GET" action=""&gt;
+  &lt;h3&gt;GET Form Demo&lt;/h3&gt;
+  &lt;p&gt;Name: &lt;input type="text" name="name"&gt;&lt;/p&gt;
+  &lt;p&gt;Color: &lt;input type="text" name="color"&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;input type="submit" value="Submit"&gt;&lt;/p&gt;
+&lt;/form&gt;
+&lt;?php } ?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forms POST -->
+    <div class="example" data-example="php forms post request hidden body htmlspecialchars">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>09 - Forms with POST</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/09_forms_post.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">POST: data hidden in URL, <code>$_POST['field']</code>. Use <code>htmlspecialchars()</code> for XSS protection.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = htmlspecialchars($_POST["name"]);
+  $email = htmlspecialchars($_POST["email"]);
+  $msg = htmlspecialchars($_POST["message"]);
+  echo "&lt;h2&gt;Thank you, $name!&lt;/h2&gt;";
+  echo "&lt;p&gt;Email: $email&lt;/p&gt;";
+  echo "&lt;p&gt;Message: $msg&lt;/p&gt;";
+} else {
+?&gt;
+&lt;form method="POST" action=""&gt;
+  &lt;h3&gt;Contact Form (POST)&lt;/h3&gt;
+  &lt;p&gt;Name: &lt;input type="text" name="name" required&gt;&lt;/p&gt;
+  &lt;p&gt;Email: &lt;input type="email" name="email" required&gt;&lt;/p&gt;
+  &lt;p&gt;Message: &lt;textarea name="message" rows="4"&gt;&lt;/textarea&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;input type="submit" value="Send"&gt;&lt;/p&gt;
+&lt;/form&gt;
+&lt;?php } ?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database -->
+    <div class="example" data-example="php mysql database mysqli connection query insert select">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>10 - MySQL Database</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/10_database.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>mysqli</code> connection, <code>query()</code>, <code>fetch_assoc()</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+$conn = new mysqli("localhost", "root", "", "Student");
+
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// Create table
+$sql = "CREATE TABLE IF NOT EXISTS StdInfor (
+  ID INT AUTO_INCREMENT PRIMARY KEY,
+  Name VARCHAR(100),
+  Age INT
+)";
+$conn->query($sql);
+
+// Insert
+$sql = "INSERT INTO StdInfor (Name, Age) VALUES ('ABC', 10)";
+$conn->query($sql);
+
+// Select
+$result = $conn->query("SELECT * FROM StdInfor");
+echo "&lt;table border='1' cellpadding='8'&gt;";
+echo "&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Age&lt;/th&gt;&lt;/tr&gt;";
+while ($row = $result->fetch_assoc()) {
+  echo "&lt;tr&gt;&lt;td&gt;{$row['ID']}&lt;/td&gt;&lt;td&gt;{$row['Name']}&lt;/td&gt;&lt;td&gt;{$row['Age']}&lt;/td&gt;&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+
+$conn->close();
+?&gt;</div>
+        </div>
+        <div class="process">
+          <div class="flow">
+            <span class="flow-step">Connect</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Query</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Fetch</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Display</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Close</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 5: XML ========== -->
+<div class="module m5" data-module="m5">
+  <div class="module-header" onclick="toggleModule(this)">
+    <h2><i class="fas fa-database"></i> Module 5: XML</h2>
+    <div class="meta"><span class="badge">6 Examples</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <!-- Basic XML -->
+    <div class="example" data-example="basic xml document declaration elements root">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>01 - Basic XML Document</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'xml')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/01_basic.xml" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">XML rules: all elements need end tags, proper nesting, quoted attributes, one root element</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;note&gt;
+  &lt;to&gt;Tove&lt;/to&gt;
+  &lt;from&gt;Jani&lt;/from&gt;
+  &lt;heading&gt;Reminder&lt;/heading&gt;
+  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Rendered</div>
+          <div class="preview-area" style="color:#333; font-family:monospace; white-space:pre; padding:16px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Elements & Attributes -->
+    <div class="example" data-example="xml elements attributes case sensitive">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>02 - Elements & Attributes</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'xml')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/02_elements_attributes.xml" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Elements: <code>&lt;tag&gt;data&lt;/tag&gt;</code> | Attributes: <code>&lt;tag attr="val"&gt;</code> | XML is case-sensitive</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;catalog&gt;
+  &lt;book id="101" genre="fiction"&gt;
+    &lt;title lang="en"&gt;The Great Gatsby&lt;/title&gt;
+    &lt;author&gt;F. Scott Fitzgerald&lt;/author&gt;
+    &lt;price&gt;10.99&lt;/price&gt;
+  &lt;/book&gt;
+  &lt;book id="102" genre="science"&gt;
+    &lt;title lang="en"&gt;A Brief History of Time&lt;/title&gt;
+    &lt;author&gt;Stephen Hawking&lt;/author&gt;
+    &lt;price&gt;15.50&lt;/price&gt;
+  &lt;/book&gt;
+&lt;/catalog&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Rendered</div>
+          <div class="preview-area" style="color:#333; font-family:monospace; white-space:pre; padding:16px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Island -->
+    <div class="example" data-example="xml data island html embedded id">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>03 - XML Data Island</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/03_data_island.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">XML embedded in HTML using <code>&lt;XML ID="xmlID"&gt;</code>, accessed via JavaScript</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;xml id="resortXML"&gt;
+  &lt;resorts&gt;
+    &lt;resort&gt;Adventure Works&lt;/resort&gt;
+    &lt;resort&gt;Alpine Ski House&lt;/resort&gt;
+    &lt;resort&gt;Contoso Ltd&lt;/resort&gt;
+  &lt;/resorts&gt;
+&lt;/xml&gt;
+
+&lt;h3&gt;Resorts from XML Data Island:&lt;/h3&gt;
+&lt;div id="output"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+var xmlData = document.getElementById("resortXML");
+var resorts = xmlData.getElementsByTagName("resort");
+var html = "&lt;ul&gt;";
+for (var i = 0; i &lt; resorts.length; i++) {
+  html += "&lt;li&gt;" + resorts[i].text + "&lt;/li&gt;";
+}
+html += "&lt;/ul&gt;";
+document.getElementById("output").innerHTML = html;
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- XML DOM -->
+    <div class="example" data-example="xml dom parser getelementsbytagname">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>04 - XML DOM Manipulation</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/04_xml_dom.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Parse XML with <code>DOMParser</code>, access elements with <code>getElementsByTagName()</code></div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">var xmlText = `&lt;?xml version="1.0"?&gt;
+&lt;bookstore&gt;
+  &lt;book category="fiction"&gt;
+    &lt;title&gt;The Great Gatsby&lt;/title&gt;
+    &lt;price&gt;10.99&lt;/price&gt;
+  &lt;/book&gt;
+  &lt;book category="science"&gt;
+    &lt;title&gt;A Brief History of Time&lt;/title&gt;
+    &lt;price&gt;15.50&lt;/price&gt;
+  &lt;/book&gt;
+&lt;/bookstore&gt;`;
+
+var parser = new DOMParser();
+var xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+var titles = xmlDoc.getElementsByTagName("title");
+console.log("Books in store:");
+for (var i = 0; i &lt; titles.length; i++) {
+  console.log("  " + titles[i].childNodes[0].nodeValue);
+}
+
+var prices = xmlDoc.getElementsByTagName("price");
+console.log("Prices:");
+for (var i = 0; i &lt; prices.length; i++) {
+  console.log("  $" + prices[i].childNodes[0].nodeValue);
+}</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- XQuery -->
+    <div class="example" data-example="xquery flwor path predicate return">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>05 - XQuery Examples</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/05_xquery_examples.xq" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">
+          <strong>Path:</strong> <code>doc("books.xml")/bookstore/book/title</code><br>
+          <strong>Predicate:</strong> <code>doc("books.xml")/bookstore/book[price&lt;30]</code><br>
+          <strong>FLWOR:</strong> <code>for $x in ... where $x/price&gt;30 order by $x/title return $x/title</code>
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-label">XQuery Code</div>
+          <div class="editor" data-lang="xml">(: XPath Examples :)
+doc("books.xml")/bookstore/book/title
+
+(: Predicate - books under $30 :)
+doc("books.xml")/bookstore/book[price &lt; 30]/title
+
+(: FLWOR Expression :)
+for $x in doc("books.xml")/bookstore/book
+where $x/price &gt; 30
+order by $x/title
+return $x/title
+
+(: More examples :)
+doc("books.xml")/bookstore/book[@category="fiction"]
+count(doc("books.xml")/bookstore/book)
+doc("books.xml")/bookstore/book[last()]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RDB to XML -->
+    <div class="example" data-example="relational database xml conversion store book mediator">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>06 - Relational DB to XML</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="5_XML/06_rdb_to_xml.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Convert relational tables to hierarchical XML using mediators</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Simulated relational tables
+var stores = [
+  { id: 1, name: "City Store" },
+  { id: 2, name: "Mall Store" }
+];
+var books = [
+  { id: 101, title: "PHP Basics", price: 25.00 },
+  { id: 102, title: "XML Guide", price: 30.00 },
+  { id: 103, title: "JS Mastery", price: 35.00 }
+];
+var storeBooks = [
+  { storeId: 1, bookId: 101 },
+  { storeId: 1, bookId: 102 },
+  { storeId: 2, bookId: 103 }
+];
+
+// Convert to XML
+var xml = '&lt;?xml version="1.0"?&gt;\n&lt;stores&gt;\n';
+stores.forEach(function(store) {
+  xml += '  &lt;store id="' + store.id + '"&gt;\n';
+  xml += '    &lt;name&gt;' + store.name + '&lt;/name&gt;\n';
+  storeBooks.filter(sb =&gt; sb.storeId === store.id).forEach(function(sb) {
+    var book = books.find(b =&gt; b.id === sb.bookId);
+    xml += '    &lt;book&gt;\n';
+    xml += '      &lt;title&gt;' + book.title + '&lt;/title&gt;\n';
+    xml += '      &lt;price&gt;' + book.price + '&lt;/price&gt;\n';
+    xml += '    &lt;/book&gt;\n';
+  });
+  xml += '  &lt;/store&gt;\n';
+});
+xml += '&lt;/stores&gt;';
+
+console.log("Generated XML:");
+console.log(xml);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 6: PROFESSOR'S LECTURE CODE ========== -->
+<div class="module" data-module="m6" style="border: 2px solid var(--yellow);">
+  <div class="module-header" onclick="toggleModule(this)" style="background: linear-gradient(135deg, #854d0e, #ca8a04, #eab308);">
+    <h2><i class="fas fa-chalkboard-teacher"></i> Module 6: Professor's Lecture Examples</h2>
+    <div class="meta"><span class="badge">36 Files</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <div class="process" style="border-left-color: var(--yellow); background: rgba(234,179,8,0.08);">
+      <h4 style="color: var(--yellow);"><i class="fas fa-info-circle"></i> Professor's Actual Lecture Code</h4>
+      <p>These are the original implementation files from Prof. Jayalath Ekanayake's lectures. All files are runnable - click <strong>Run</strong> for browser-based examples, or view the server-side files.</p>
+    </div>
+
+    <!-- Section: HTML & CSS -->
+    <div class="process" style="border-left-color: var(--orange); background: rgba(251,146,60,0.08);">
+      <h4 style="color: var(--orange);"><i class="fas fa-file-code"></i> HTML & CSS Examples</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture mission vision external css university">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>1. University Mission & Vision (External CSS)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/index--.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">University page with external stylesheet <code>styles.css</code>. Demonstrates linking CSS, container layout, mission/vision sections.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;div class="container"&gt;
+  &lt;header&gt;
+    &lt;h1&gt;University Mission &amp; Vision&lt;/h1&gt;
+    &lt;p&gt;Committed to academic excellence.&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;section&gt;
+    &lt;h2 style="color: #69228a;"&gt;Our Mission&lt;/h2&gt;
+    &lt;p&gt;To empower learners through high-quality education.&lt;/p&gt;
+    &lt;ul class="mission-list"&gt;
+      &lt;li&gt;Provide accessible academic programs&lt;/li&gt;
+      &lt;li&gt;Support research and innovation&lt;/li&gt;
+      &lt;li&gt;Foster a diverse, inclusive campus&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+  &lt;section&gt;
+    &lt;h2 style="color: #24b161;"&gt;Our Vision&lt;/h2&gt;
+    &lt;p&gt;To become a leading university.&lt;/p&gt;
+    &lt;ul class="vision-list"&gt;
+      &lt;li&gt;Inspire lifelong learning&lt;/li&gt;
+      &lt;li&gt;Advance innovation&lt;/li&gt;
+      &lt;li&gt;Build global leaders&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture may23 innerhtml dom basic">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>2. Basic DOM innerHTML (may23)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/may23.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Simplest DOM manipulation: <code>getElementById().innerHTML</code> to change text content.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h1&gt;My First Web Page&lt;/h1&gt;
+&lt;p&gt;My First Paragraph&lt;/p&gt;
+&lt;p id="demo"&gt;Original Text&lt;/p&gt;
+&lt;script&gt;
+  document.getElementById("demo").innerHTML = "New Text";
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture form student grading html">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>3. Student Grading Form</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/form.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">HTML form for student grading - POSTs to Node.js server. Fields: Name, Index Number, Maths, English, Sciences.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;style&gt;
+  body { font-family: Arial; margin: 40px; }
+  input { display: block; margin: 10px 0; padding: 8px; width: 250px; }
+  input[type=submit] { width: auto; padding: 8px 20px; cursor: pointer; }
+&lt;/style&gt;
+&lt;h1&gt;Student Grading App&lt;/h1&gt;
+&lt;form action="/result" method="POST"&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input type="text" name="name" required&gt;
+  &lt;label&gt;Index Number:&lt;/label&gt;
+  &lt;input type="text" name="indexNumber" required&gt;
+  &lt;label&gt;Maths Marks:&lt;/label&gt;
+  &lt;input type="number" name="maths" step="0.01" required&gt;
+  &lt;label&gt;English Marks:&lt;/label&gt;
+  &lt;input type="number" name="english" step="0.01" required&gt;
+  &lt;label&gt;Sciences Marks:&lt;/label&gt;
+  &lt;input type="number" name="sciences" step="0.01" required&gt;
+  &lt;input type="submit" value="Submit"&gt;
+&lt;/form&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: JavaScript Functions -->
+    <div class="process" style="border-left-color: var(--green); background: rgba(34,197,94,0.08); margin-top: 20px;">
+      <h4 style="color: var(--green);"><i class="fab fa-js-square"></i> JavaScript Functions & Objects</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture js function basic return add">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>4. JS Function - Basic (jsfuntion.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/jsfuntion.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Basic function with 3 parameters, return value, and <code>document.write</code> output.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">function myFunction(a, b, c) {
+  return a + b + c;
+}
+
+var result = myFunction(5, 10, 15);
+console.log("The result of myFunction(5,10,15) is: " + result);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture js function dom input parseInt sum">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>5. JS Function - DOM Input (js_funtion.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/js_funtion.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Reads input from DOM, parses to int, calculates sum. Also shows nested function calls.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;input type="text" id="input1" placeholder="Number 1"&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;input type="text" id="input2" placeholder="Number 2"&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;button type="button" onclick="myFunction()"&gt;Test Input&lt;/button&gt;
+&lt;p id="result"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function myFunction() {
+  var a = document.getElementById("input1").value;
+  var b = document.getElementById("input2").value;
+  document.getElementById("result").innerHTML =
+    'Sum of ' + a + ' and ' + b + ' is ' + (parseInt(a) + parseInt(b));
+}
+
+function myFunction1(a, b) {
+  return a + b;
+}
+
+function myFunction2(a, b) {
+  var squareA = myFunction1(a) + myFunction1(b);
+  return squareA;
+}
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture js object basic person method">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>6. JS Object - Basic (jsobject.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/jsobject.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Object with properties and method using <code>this</code> keyword and template literals.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">const person = {
+  firstName: "Jane",
+  lastName: "Doe",
+  age: 28,
+  email: "jane.doe@example.com",
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+};
+
+console.log("Name: " + person.fullName());
+console.log("Age: " + person.age);
+console.log("Email: " + person.email);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture js array objects courses semester iteration">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>7. JS Array of Objects (jsoperatiotors.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/jsoperatiotors.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Array of course objects, iterate with for loop, build HTML list.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">var courses = [
+  {course_id: 1, course_name: "JavaScript", Semester: "2024 Semester 1"},
+  {course_id: 2, course_name: "HTML", Semester: "2024 Semester 1"},
+  {course_id: 3, course_name: "CSS", Semester: "2024 Semester 1"},
+  {course_id: 4, course_name: "Python", Semester: "2024 Semester 2"},
+  {course_id: 5, course_name: "Java", Semester: "2024 Semester 2"}
+];
+
+var txt = "Courses:\n";
+for (var i = 0; i &lt; courses.length; i++) {
+  txt += "• " + courses[i].course_name + " - " + courses[i].Semester + "\n";
+}
+console.log(txt);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Control Structures & Loops (from opearators.html) -->
+    <div class="process" style="border-left-color: var(--accent2); background: rgba(129,140,248,0.08); margin-top: 20px;">
+      <h4 style="color: var(--accent2);"><i class="fas fa-code-branch"></i> Control Structures, Loops & Salary Calculator</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture if else switch salary grade loops arrays comprehensive">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>8. Comprehensive JS Examples (opearators.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/opearators.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">10 examples: if/else, switch, grade calculation, salary calculator, for/while loops, array operations - all in one file.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Example 1 - If/Else
+var a = 11;
+if (a == 10) { a = a + 7; } else { a = 0; }
+console.log("Ex1 - Value of a: " + a);
+
+// Example 4 - Grade Calculation
+var mark = 70;
+var grade = '';
+if (mark >= 80) grade = "A";
+else if (mark > 60) grade = "B";
+else if (mark >= 40) grade = "C";
+else grade = "F";
+console.log("Grade: " + grade);
+
+// Example 5 - Switch
+let day = 3;
+let dayName;
+switch (day) {
+  case 1: dayName = "Monday"; break;
+  case 2: dayName = "Tuesday"; break;
+  case 3: dayName = "Wednesday"; break;
+  default: dayName = "Weekend";
+}
+console.log("Day: " + dayName);
+
+// Example 7 - Salary Calculator
+var basic_salary = 50000;
+var allowance = 0;
+var deduction = 3000;
+if (basic_salary > 50000) allowance = basic_salary * 0.2;
+else if (basic_salary > 30000) allowance = basic_salary * 0.1;
+else allowance = basic_salary * 0.05;
+var gross = basic_salary + allowance - deduction;
+console.log("Salary: Basic=" + basic_salary + " Allowance=" + allowance + " Deduction=" + deduction + " Gross=" + gross);
+
+// Example 8 - For Loop (odd/even)
+var oddtotal = 0, eventotal = 0;
+for (i = 0; i &lt; 25; i++) {
+  if (i % 2 == 1) oddtotal += i;
+  else eventotal += i;
+}
+console.log("Odd sum: " + oddtotal + ", Even sum: " + eventotal);
+
+// Example 10 - Array
+var arr = [1,2,3,4,5,6,7,8,9,10];
+var sum = 0;
+for (var i = 0; i &lt; arr.length; i++) sum += arr[i];
+console.log("Array sum: " + sum);</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture salary calculator interactive input deduction allowance">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>9. Monthly Salary Calculator (ms_args.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/ms_args.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Interactive salary calculator with user input. Allowance tiers: &lt;30k=10%, 30k-50k=15%, &gt;50k=20%.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h1&gt;Monthly Salary Calculator&lt;/h1&gt;
+&lt;label&gt;Enter Basic Salary:&lt;/label&gt;
+&lt;input type="number" id="salary"&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;label&gt;Enter Deductions:&lt;/label&gt;
+&lt;input type="number" id="deduction"&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;button onclick="calculateSalary()"&gt;Calculate Salary&lt;/button&gt;
+&lt;hr&gt;
+&lt;h2&gt;Output&lt;/h2&gt;
+&lt;p id="result1"&gt;&lt;/p&gt;
+&lt;p id="result2"&gt;&lt;/p&gt;
+&lt;p id="result3"&gt;&lt;/p&gt;
+&lt;p id="result4"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function calculateSalary() {
+  var basicSalary = parseFloat(document.getElementById("salary").value);
+  var deductions = parseFloat(document.getElementById("deduction").value);
+  var allowance = 0;
+
+  if (basicSalary &lt; 30000) allowance = basicSalary * 0.10;
+  else if (basicSalary &gt;= 30000 && basicSalary &lt;= 50000) allowance = basicSalary * 0.15;
+  else allowance = basicSalary * 0.20;
+
+  var totalSalary = basicSalary + allowance - deductions;
+  document.getElementById("result1").innerHTML = "Basic Salary: " + basicSalary;
+  document.getElementById("result2").innerHTML = "Allowance: " + allowance;
+  document.getElementById("result3").innerHTML = "Deductions: " + deductions;
+  document.getElementById("result4").innerHTML = "Monthly Salary: " + totalSalary;
+}
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Arrays & Iteration (from june06.html) -->
+    <div class="process" style="border-left-color: var(--pink); background: rgba(244,114,182,0.08); margin-top: 20px;">
+      <h4 style="color: var(--pink);"><i class="fas fa-layer-group"></i> Arrays, Objects & HTML Generation (june06)</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture array iteration for while nested objects student grading salary table list">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>10. Array Iteration & Object Examples (june06.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/june06.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">7 sub-examples: Array iteration (for/while/for-in), objects in arrays, nested objects with grading, employee salary, building HTML lists & tables.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// 1. Array Iteration
+var a = new Array(1, 2, 3, 4, 5);
+console.log("--- Array Iteration ---");
+for (var i = 0; i &lt; a.length; i++) console.log("for: " + a[i]);
+var idx = 0;
+while (idx &lt; a.length) { console.log("while: " + a[idx]); idx++; }
+
+// 2. Objects in Arrays
+var person = { name: 'John', age: 30, city: 'New York' };
+var person1 = { name: 'Jane', age: 25, city: 'Los Angeles' };
+var classArr = [person, person1];
+console.log("\n--- Objects in Arrays ---");
+console.log("Name: " + classArr[0].name + ", Age: " + classArr[0].age);
+
+// 3. Nested Object with Grading
+var student = {
+  Name: 'John', Marks: { Maths: 80, Science: 85, English: 90 }
+};
+var total = student.Marks.Maths + student.Marks.Science + student.Marks.English;
+var average = total / 3;
+console.log("\n--- Student Grading ---");
+console.log("Student: " + student.Name + ", Average: " + average.toFixed(2));
+if (average >= 75) console.log("Grade: A");
+else if (average >= 65) console.log("Grade: B");
+else if (average >= 50) console.log("Grade: C");
+else console.log("Grade: F");
+
+// 4. Employee Salary
+var employee = { name: 'Alice', salary: { basic: 50000, bonus: 10000 } };
+console.log("\n--- Employee Salary ---");
+console.log(employee.name + " Total: " + (employee.salary.basic + employee.salary.bonus));
+
+// 5. Building HTML List
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+console.log("\n--- Fruits List ---");
+fruits.forEach(f => console.log("• " + f));
+
+// 6. Average of Even Indices
+var numArr = new Array(100);
+for (var i = 0; i &lt; 100; i++) numArr[i] = i + 1;
+var totalEven = 0;
+for (var i in numArr) { if (i % 2 == 0) totalEven += numArr[i]; }
+console.log("\n--- Even Index Avg: " + (totalEven / numArr.length).toFixed(2));
+
+// 7. Building Table
+var courses = [
+  { ID: 'CS101', Name: 'Intro to CS', Semester: 'Fall 2024' },
+  { ID: 'CS102', Name: 'Data Structures', Semester: 'Spring 2024' }
+];
+console.log("\n--- Course Table ---");
+courses.forEach(c => console.log(c.ID + " | " + c.Name + " | " + c.Semester));</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Try/Catch, Objects, JSON, Classes (from june27.html) -->
+    <div class="process" style="border-left-color: var(--red); background: rgba(248,113,113,0.08); margin-top: 20px;">
+      <h4 style="color: var(--red);"><i class="fas fa-shield-alt"></i> Exception Handling, JSON & Classes (june27)</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture try catch exception validation division by zero json parse class student">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>11. Try/Catch, JSON & Classes (june27.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/june27.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">5 demos: Try/catch input validation, division by zero, objects with methods, JSON parsing, class instances.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;style&gt;
+  .demo { margin: 10px 0; padding: 12px; background: #f9f9f9; border-left: 4px solid #3498db; font-family: monospace; }
+&lt;/style&gt;
+
+&lt;h2&gt;1. Try/Catch - Input Validation&lt;/h2&gt;
+&lt;input id="validationInput" type="text" placeholder="Enter 5-10"&gt;
+&lt;button onclick="validateInput()"&gt;Test Input&lt;/button&gt;
+&lt;p id="validationMessage" style="font-weight:bold;"&gt;&lt;/p&gt;
+
+&lt;h2&gt;2. Try/Catch - Division&lt;/h2&gt;
+&lt;input id="numA" type="number" value="10" style="width:60px"&gt; /
+&lt;input id="numB" type="number" value="0" style="width:60px"&gt;
+&lt;button onclick="runDivision()"&gt;Divide&lt;/button&gt;
+&lt;div id="divisionResult" class="demo"&gt;Result will show here&lt;/div&gt;
+
+&lt;div id="objectDemo" class="demo"&gt;&lt;/div&gt;
+&lt;div id="jsonDemo" class="demo"&gt;&lt;/div&gt;
+&lt;div id="classDemo" class="demo"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+function validateInput() {
+  let x = document.getElementById("validationInput").value;
+  try {
+    if (x.trim() == "") throw "empty";
+    if (isNaN(x)) throw "not a number";
+    x = Number(x);
+    if (x &lt; 5) throw "too low";
+    if (x &gt; 10) throw "too high";
+    document.getElementById("validationMessage").style.color = "green";
+    document.getElementById("validationMessage").innerHTML = "Input is valid!";
+  } catch(err) {
+    document.getElementById("validationMessage").style.color = "red";
+    document.getElementById("validationMessage").innerHTML = "Input is " + err;
+  }
+}
+
+function divideNumbers(a, b) {
+  try {
+    if (b == 0) throw "Division by zero!";
+    return a / b;
+  } catch(err) { return err; }
+}
+
+function runDivision() {
+  let a = Number(document.getElementById("numA").value);
+  let b = Number(document.getElementById("numB").value);
+  document.getElementById("divisionResult").innerHTML = "Result: " + divideNumbers(a, b);
+}
+runDivision();
+
+// Object with method
+let student = { name: "John Doe", major: "CS", dob: "2003-01-15",
+  age() { return new Date().getFullYear() - new Date(this.dob).getFullYear(); }
+};
+document.getElementById("objectDemo").innerHTML = "&lt;strong&gt;Object:&lt;/strong&gt; " + student.name + ", Age: " + student.age();
+
+// JSON
+let text = '{"employees":[{"firstName":"John","lastName":"Doe"},{"firstName":"Anna","lastName":"Smith"}]}';
+const obj = JSON.parse(text);
+document.getElementById("jsonDemo").innerHTML = "&lt;strong&gt;JSON:&lt;/strong&gt; " + obj.employees[1].firstName + " " + obj.employees[1].lastName;
+
+// Class
+class Student {
+  constructor(name, dob, regNo, contact) { this.name = name; this.dob = dob; this.regNo = regNo; this.contact = contact; }
+}
+var st1 = new Student("John", "2003-01-15", "REG001", "123-456");
+var st2 = new Student("Jane", "2004-02-20", "REG002", "987-654");
+document.getElementById("classDemo").innerHTML = "&lt;strong&gt;Classes:&lt;/strong&gt; " + st1.name + " (" + st1.regNo + "), " + st2.name + " (" + st2.regNo + ")";
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture try catch basic undefined variable button">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>12. Try/Catch - Basic (trycatch.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/trycatch.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Simple try/catch with undefined variable error, finally block.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;button id="tryCatchButton"&gt;Click to run try/catch&lt;/button&gt;
+&lt;p id="output"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+document.getElementById('tryCatchButton').addEventListener('click', function() {
+  try {
+    let result = undefinedVariable + 1;
+    document.getElementById('output').textContent = 'Result: ' + result;
+  } catch (error) {
+    document.getElementById('output').textContent = 'Caught an error: ' + error.message;
+  } finally {
+    console.log('Button click handled.');
+  }
+});
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture try catch input validation range empty">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>13. Try/Catch - Range Validation (trycatch1.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/trycatch1.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Validate input is between 5 and 10. Throws: empty, not a number, too low, too high.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h2&gt;JavaScript try catch&lt;/h2&gt;
+&lt;p&gt;Please input a number between 5 and 10:&lt;/p&gt;
+&lt;input id="demo" type="text"&gt;
+&lt;button type="button" onclick="myFunction()"&gt;Test Input&lt;/button&gt;
+&lt;p id="p01"&gt;&lt;/p&gt;
+&lt;p id="p02"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function myFunction() {
+  document.getElementById("p02").innerHTML = "";
+  let x = document.getElementById("demo").value;
+  try {
+    if (x.trim() == "") throw "empty";
+    if (isNaN(x)) throw "not a number";
+    x = Number(x);
+    if (x &lt; 5) throw "too low";
+    if (x &gt; 10) throw "too high";
+    document.getElementById("p01").innerHTML = "Valid input: " + x;
+    document.getElementById("p01").style.color = "green";
+  } catch(err) {
+    document.getElementById("p01").innerHTML = "Input is " + err;
+    document.getElementById("p01").style.color = "red";
+  }
+}
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: OOP -->
+    <div class="process" style="border-left-color: var(--accent); background: rgba(56,189,248,0.08); margin-top: 20px;">
+      <h4 style="color: var(--accent);"><i class="fas fa-cubes"></i> Object-Oriented Programming</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture inheritance class person student super extends oop">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>14. Class Inheritance (oop.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/oop.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>Person</code> base class → <code>Student</code> derived class using <code>extends</code> and <code>super()</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">class Person {
+  constructor(fname, lname, dob, contact) {
+    this.fname = fname;
+    this.lname = lname;
+    this.dob = dob;
+    this.contact = contact;
+  }
+  fullname() {
+    return this.fname + " " + this.lname;
+  }
+}
+
+class Student extends Person {
+  constructor(fname, lname, dob, regNo, contact) {
+    super(fname, lname, dob, contact);
+    this.regNo = regNo;
+  }
+  displayInfo() {
+    return "Full Name: " + this.fullname() +
+      "\nDOB: " + this.dob +
+      "\nReg No: " + this.regNo +
+      "\nContact: " + this.contact;
+  }
+}
+
+var st1 = new Student("John", "Doe", "2003-01-15", "REG001", "123-456-7890");
+var st2 = new Student("Jane", "Smith", "2004-02-20", "REG002", "987-654-3210");
+console.log(st1.displayInfo());
+console.log("---");
+console.log(st2.displayInfo());</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture oop encapsulation abstraction inheritance polymorphism bank account shape">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>15. OOP Concepts (objectoriented.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'js')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/objectoriented.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">All 4 OOP pillars: Encapsulation (closure), Abstraction (BankAccount), Inheritance (Animal→Dog), Polymorphism (Shape→Rectangle/Circle).</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="javascript">// Encapsulation
+function createUser(name, password) {
+  let secret = password;
+  return {
+    getName: () => name,
+    checkPassword: (val) => val === secret
+  };
+}
+const user = createUser('Alice', '1234');
+console.log("Encapsulation: " + user.getName() + ", valid=" + user.checkPassword('1234'));
+
+// Abstraction - BankAccount
+function BankAccount(owner, balance) {
+  this.owner = owner; this.balance = balance;
+}
+BankAccount.prototype.deposit = function(amt) { if (amt > 0) this.balance += amt; };
+BankAccount.prototype.withdraw = function(amt) { if (amt > 0 &amp;&amp; amt &lt;= this.balance) this.balance -= amt; };
+BankAccount.prototype.getBalance = function() { return this.balance; };
+const acct = new BankAccount('Bob', 100);
+acct.deposit(50); acct.withdraw(30);
+console.log("Abstraction: balance=" + acct.getBalance());
+
+// Inheritance
+function Animal(name) { this.name = name; }
+Animal.prototype.speak = function() { return this.name + ' makes a sound.'; };
+function Dog(name) { Animal.call(this, name); }
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.speak = function() { return this.name + ' barks.'; };
+console.log("Inheritance: " + new Dog('Rex').speak());
+
+// Polymorphism
+function Shape() {}
+Shape.prototype.area = function() { return 0; };
+function Rectangle(w, h) { this.w = w; this.h = h; }
+Rectangle.prototype = Object.create(Shape.prototype);
+Rectangle.prototype.area = function() { return this.w * this.h; };
+function Circle(r) { this.r = r; }
+Circle.prototype = Object.create(Shape.prototype);
+Circle.prototype.area = function() { return Math.PI * this.r * this.r; };
+console.log("Polymorphism: rect=" + new Rectangle(4,5).area() + ", circle=" + new Circle(3).area().toFixed(2));</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Console Output</div>
+          <div class="output-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture student record object array add display form management">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>16. Student Record Management (student_object.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student_object.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Full CRUD: form to add student objects to array, display all records. Uses <code>push()</code> and <code>for</code> loop.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;style&gt;
+  body { font-family: Arial; margin: 20px; }
+  input { display: block; margin: 6px 0; padding: 6px; width: 220px; }
+  button { padding: 8px 14px; margin: 4px; cursor: pointer; background: #007bff; color: #fff; border: none; border-radius: 4px; }
+  .area { margin-top: 16px; padding: 12px; border: 1px solid #ddd; max-width: 350px; min-height: 40px; }
+&lt;/style&gt;
+&lt;h2&gt;Student Record Form&lt;/h2&gt;
+&lt;input type="text" id="name" placeholder="Name"&gt;
+&lt;input type="date" id="dob"&gt;
+&lt;input type="text" id="regNo" placeholder="Reg Number"&gt;
+&lt;input type="text" id="contact" placeholder="Contact"&gt;
+&lt;button onclick="addStudent()"&gt;Add Student&lt;/button&gt;
+&lt;button onclick="displayStudents()"&gt;Display Students&lt;/button&gt;
+&lt;div id="displayArea" class="area"&gt;No records yet.&lt;/div&gt;
+
+&lt;script&gt;
+let studentArray = [];
+function addStudent() {
+  let n = document.getElementById("name").value;
+  let d = document.getElementById("dob").value;
+  let r = document.getElementById("regNo").value;
+  let c = document.getElementById("contact").value;
+  if (!n || !d || !r || !c) { alert("Fill all fields!"); return; }
+  studentArray.push({name:n, dob:d, regNo:r, contact:c});
+  document.getElementById("name").value = "";
+  document.getElementById("dob").value = "";
+  document.getElementById("regNo").value = "";
+  document.getElementById("contact").value = "";
+  alert("Student added!");
+}
+function displayStudents() {
+  if (!studentArray.length) { document.getElementById("displayArea").innerHTML = "No students."; return; }
+  let text = "";
+  for (let i = 0; i &lt; studentArray.length; i++) {
+    let s = studentArray[i];
+    text += "&lt;strong&gt;Name:&lt;/strong&gt; " + s.name + "&lt;br&gt;DOB: " + s.dob + "&lt;br&gt;Reg: " + s.regNo + "&lt;br&gt;Contact: " + s.contact + "&lt;hr&gt;";
+  }
+  document.getElementById("displayArea").innerHTML = text;
+}
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: PHP -->
+    <div class="process" style="border-left-color: var(--accent); background: rgba(59,130,246,0.08); margin-top: 20px;">
+      <h4 style="color: var(--accent);"><i class="fab fa-php"></i> PHP</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture php switch case value break default">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>17. PHP Switch Statement (switch.php)</h3>
+        <div class="actions">
+          <a class="btn-view" href="prof_examples/switch.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Basic PHP switch statement with <code>break</code> and <code>default</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+$value = 4;
+switch ($value) {
+  case 1:
+    echo "Value is 1";
+    break;
+  case 5:
+    echo "Value is 5";
+    break;
+  default:
+    echo "Value is 4";
+    break;
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Node.js Servers -->
+    <div class="process" style="border-left-color: var(--green); background: rgba(34,197,94,0.08); margin-top: 20px;">
+      <h4 style="color: var(--green);"><i class="fab fa-node-js"></i> Node.js Servers</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture nodejs http server basic hello world">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>18. Basic HTTP Server (server.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/server.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Simplest Node.js HTTP server returning "Hello World".</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const http = require('http');
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World\n');
+});
+const PORT = 8083;
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}/`);
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture nodejs http server module import mymodule date calculation">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>19. HTTP Server with Module (server_1.js + mymodule.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/server_1.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">HTTP server importing custom <code>mymodule.js</code> with <code>getDate()</code> and <code>calculation()</code> exports.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">// mymodule.js
+function getDate() { return new Date(); }
+function calculation() { return 5 + 5; }
+module.exports = { getDate, calculation };
+
+// server_1.js
+var http = require('http');
+var dt = require('./mymodule');
+function myFunction(req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.write('Hi there ' + dt.getDate());
+  res.write('Calculation result: ' + dt.calculation());
+  res.end();
+}
+http.createServer(myFunction).listen(8080);
+console.log('Server running at http://localhost:8080/');</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture express server basic get route root">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>20. Express Server (server2.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/server2.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Express.js server with GET route on root URL.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.listen(PORT, (error) => {
+  if (!error) console.log("Server running on port " + PORT);
+  else console.log("Error: " + error);
+});
+
+app.get('/', (req, res) => {
+  res.status(200);
+  res.send("Welcome to root URL of Server");
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Body Parser & Forms -->
+    <div class="process" style="border-left-color: var(--orange); background: rgba(251,146,60,0.08); margin-top: 20px;">
+      <h4 style="color: var(--orange);"><i class="fas fa-database"></i> Body Parser, Forms & File I/O</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture body parser express form multiple routes sum name">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>21. Body Parser - Multiple Routes (body-parser.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/body-parser.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">3 POST routes: name concatenation, name swap, and number addition. Uses body-parser middleware.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/example', (req, res) => {
+  res.send(`Full name: ${req.body.fname} ${req.body.lname}`);
+});
+app.post('/example1', (req, res) => {
+  res.send(`Reversed: ${req.body.lname} ${req.body.fname}`);
+});
+app.post('/example2', (req, res) => {
+  let sum = parseInt(req.body.fname) + parseInt(req.body.lname);
+  res.send(`Sum: ${sum}`);
+});
+
+app.listen(8080, () => console.log('Running on port 8080'));</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture express body parse json urlencoded process">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>22. Express Body Parse (express_body_parse.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/express_body_parse.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Express with both URL-encoded and JSON body parsing. Returns received data as JSON.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const path = require('path');
+const app = express();
+const port = 3000;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.get('/example.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'example.html'));
+});
+
+app.post('/process', (req, res) => {
+  const data = req.body;
+  res.json({ message: 'Data received', received: data });
+});
+
+app.listen(port, () => console.log(`Running on http://localhost:${port}`));</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture file create append write myfile">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>23. File Create/Append (file_create.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/file_create.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc"><code>fs.appendFile()</code> to create/append content to a text file.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var fs = require('fs');
+fs.appendFile('myfile.txt', 'Hello content! \n hi there \n',
+  function(err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture file io http server read file html serve">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>24. File I/O - HTTP Server (fileio.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/fileio.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">HTTP server that reads <code>file.html</code> and serves it. Error handling for missing files.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('file.html', function (err, data) {
+    if (err) {
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      res.write('Internal Server Error');
+      return res.end();
+    }
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    return res.end();
+  });
+}).listen(8080);</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Student Grading Systems -->
+    <div class="process" style="border-left-color: var(--accent2); background: rgba(129,140,248,0.08); margin-top: 20px;">
+      <h4 style="color: var(--accent2);"><i class="fas fa-graduation-cap"></i> Student Grading Systems (Complete Apps)</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture student grading basic express average grade abcdef">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>25. Student Grading - Basic (student-grading-basic.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student-grading-basic.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Complete Express app: serves form, calculates average, assigns grade (A-F), displays result.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/result', (req, res) => {
+  let name = req.body.name;
+  let maths = parseFloat(req.body.maths);
+  let english = parseFloat(req.body.english);
+  let sciences = parseFloat(req.body.sciences);
+  let average = (maths + english + sciences) / 3;
+  let grade;
+  if (average >= 80) grade = 'A';
+  else if (average >= 70) grade = 'B';
+  else if (average >= 60) grade = 'C';
+  else if (average >= 50) grade = 'D';
+  else if (average >= 40) grade = 'E';
+  else grade = 'F';
+
+  res.send(`&lt;h2&gt;Result&lt;/h2&gt;
+    &lt;p&gt;Name: ${name}&lt;/p&gt;
+    &lt;p&gt;Marks: ${maths}, ${english}, ${sciences}&lt;/p&gt;
+    &lt;p&gt;Average: ${average.toFixed(2)}&lt;/p&gt;
+    &lt;p&gt;Grade: ${grade}&lt;/p&gt;
+    &lt;a href="/"&gt;Go Back&lt;/a&gt;`);
+});
+
+app.listen(8080, () => console.log('Running on port 8080'));</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture student grading mysql database insert create table">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>26. Student Grading + MySQL (student-grading.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student-grading.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Full app with MySQL: creates <code>student_grades</code> table, inserts records with prepared statements.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const app = express();
+
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_example'
+});
+
+connection.connect((err) => {
+  if (err) { console.error(err); return; }
+  console.log('Connected to MySQL');
+  connection.query(`CREATE TABLE IF NOT EXISTS student_grades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100), index_number VARCHAR(50),
+    maths DECIMAL(5,2), english DECIMAL(5,2), sciences DECIMAL(5,2),
+    average DECIMAL(5,2), grade CHAR(1),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`, (err) => { if (err) console.error(err); });
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/result', (req, res) => {
+  let { name, indexNumber } = req.body;
+  let maths = parseFloat(req.body.maths);
+  let english = parseFloat(req.body.english);
+  let sciences = parseFloat(req.body.sciences);
+  let average = (maths + english + sciences) / 3;
+  let grade = average >= 80 ? 'A' : average >= 70 ? 'B' : average >= 60 ? 'C' : average >= 50 ? 'D' : average >= 40 ? 'E' : 'F';
+
+  connection.query(
+    'INSERT INTO student_grades (name, index_number, maths, english, sciences, average, grade) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [name, indexNumber, maths, english, sciences, average.toFixed(2), grade],
+    (err) => {
+      if (err) { res.send('Error: ' + err.message); return; }
+      res.send(`&lt;h2&gt;Saved! ${name}: ${grade} (${average.toFixed(2)})&lt;/h2&gt;&lt;a href="/"&gt;Back&lt;/a&gt;`);
+    }
+  );
+});
+app.listen(8080);</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture student grade data file append timestamp myfile">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>27. Student Grading + File Save (student_grade_data.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student_grade_data.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Saves form data to <code>myfile.txt</code> with timestamps. Uses <code>fs.appendFile()</code> with record separators.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const formPath = path.join(__dirname, 'form.html');
+const outPath = path.join(__dirname, 'myfile.txt');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.get('/', (req, res) => { res.sendFile(formPath); });
+
+app.post('/result', (req, res) => {
+  const formData = req.body;
+  const timestamp = new Date().toISOString();
+  const sep = '\n' + '='.repeat(50) + '\n';
+  const output = `[${timestamp}]\r\n${Object.entries(formData)
+    .map(([k, v]) => `${k}: ${v}`).join('\r\n')}${sep}`;
+
+  if (!fs.existsSync(outPath)) fs.writeFileSync(outPath, '', 'utf8');
+  fs.appendFile(outPath, output, 'utf8', (err) => {
+    if (err) { res.status(500).send('Failed to save'); return; }
+    res.send('Student data appended to ' + outPath);
+  });
+});
+app.listen(3000, () => console.log('Listening on port 3000'));</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture filewrite sir form student save txt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>28. File Write with Form (filewrite-sir)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/filewrite-sir" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Express form that saves student records (name, index, marks) to <code>myfile.txt</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => { res.sendFile(__dirname + '/student_management.html'); });
+
+app.post('/example', (req, res) => {
+  let text = req.body.fname + " " + req.body.index + " " +
+    req.body.math + " " + req.body.science + " " + req.body.english;
+  fs.appendFile('myfile.txt', text + '\n', function(err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
+  res.send('Student record is saved');
+});
+
+app.listen(8080, () => console.log('Running on port 8080'));</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: MySQL -->
+    <div class="process" style="border-left-color: var(--yellow); background: rgba(234,179,8,0.08); margin-top: 20px;">
+      <h4 style="color: var(--yellow);"><i class="fas fa-database"></i> MySQL Integration</h4>
+    </div>
+
+    <div class="example" data-example="professor lecture mysql2 connection query select solution">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>29. MySQL Connection & Query (mysql.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/mysql.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">MySQL2 connection, test query <code>SELECT 1+1</code>, connection lifecycle.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const mysql = require('mysql2');
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_example'
+});
+
+connection.connect((err) => {
+  if (err) { console.error('Connection error:', err); return; }
+  console.log('Connected to MySQL database!');
+});
+
+connection.query('SELECT 1 + 1 AS solution', (err, results) => {
+  if (err) { console.error('Query error:', err); return; }
+  console.log('Query result:', results);
+});
+
+connection.end((err) => {
+  if (err) { console.error('Close error:', err); return; }
+  console.log('Connection closed');
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture mysql2 create database">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>30. MySQL Create Database (mysql2.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/mysql2.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Connect to MySQL and create a new database.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var mysql = require('mysql2');
+var con = mysql.createConnection({
+  host: "localhost", user: "root", password: ""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "CREATE DATABASE mydb";
+  con.query(sql, function(err, result) {
+    if (err) throw err;
+    console.log("Result: " + result);
+  });
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="professor lecture monthly salary calculator hardcoded if else">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>31. Salary Calculator - Hardcoded (Monthly_Salary.html)</h3>
+        <div class="actions">
+          <button class="btn-run" onclick="event.stopPropagation(); runCode(this, 'html')">▶ Run</button>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/Monthly_Salary.html" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Salary calculator with hardcoded values. Allowance tiers: &lt;30k=10%, 30k-50k=15%, &gt;50k=20%.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Editor</div>
+          <div class="editor" data-lang="htmlmixed">&lt;h1&gt;Monthly Salary Calculator&lt;/h1&gt;
+&lt;p id="r1"&gt;&lt;/p&gt;
+&lt;p id="r2"&gt;&lt;/p&gt;
+&lt;p id="r3"&gt;&lt;/p&gt;
+&lt;p id="r4"&gt;&lt;/p&gt;
+&lt;script&gt;
+var basicSalary = 45000;
+var allowance = 0;
+var deductions = 5000;
+
+if (basicSalary &lt; 30000) allowance = basicSalary * 0.10;
+else if (basicSalary &gt;= 30000 && basicSalary &lt;= 50000) allowance = basicSalary * 0.15;
+else allowance = basicSalary * 0.20;
+
+var totalSalary = basicSalary + allowance - deductions;
+document.getElementById("r1").innerHTML = "Basic Salary: " + basicSalary;
+document.getElementById("r2").innerHTML = "Allowance: " + allowance;
+document.getElementById("r3").innerHTML = "Deductions: " + deductions;
+document.getElementById("r4").innerHTML = "Monthly Salary: " + totalSalary;
+&lt;/script&gt;</div>
+        </div>
+        <div class="output-wrap">
+          <div class="output-label">Output</div>
+          <div class="preview-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 7: DATABASE COMMUNICATION ========== -->
+<div class="module" data-module="m7" style="border: 2px solid #7c3aed;">
+  <div class="module-header" onclick="toggleModule(this)" style="background: linear-gradient(135deg, #581c87, #7c3aed, #6d28d9);">
+    <h2><i class="fas fa-database"></i> Module 7: Database Communication (mit_ipt)</h2>
+    <div class="meta"><span class="badge">Live DB</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <div class="process" style="border-left-color: #7c3aed; background: rgba(124,58,237,0.08);">
+      <h4 style="color: #7c3aed;"><i class="fas fa-info-circle"></i> Database: <code>mit_ipt</code> (MySQL)</h4>
+      <p>All examples below connect to the <strong>mit_ipt</strong> database. <a href="db_setup.php" target="_blank" style="color:#7c3aed;font-weight:700;">⚙️ Setup &amp; Seed Data</a> | <a href="db_config.php" target="_blank" style="color:#7c3aed;">📄 Config File</a></p>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-card"><div class="icon">📋</div><h5>students</h5><p>5 records - Student profiles with index numbers</p></div>
+      <div class="concept-card"><div class="icon">📊</div><h5>student_grades</h5><p>5 records - Marks, averages &amp; grades</p></div>
+      <div class="concept-card"><div class="icon">📚</div><h5>courses</h5><p>5 records - CS &amp; IT courses</p></div>
+      <div class="concept-card"><div class="icon">👔</div><h5>employees</h5><p>5 records - Staff with salary data</p></div>
+      <div class="concept-card"><div class="icon">📦</div><h5>products</h5><p>5 records - Inventory items</p></div>
+      <div class="concept-card"><div class="icon">👤</div><h5>users</h5><p>3 records - Auth users with roles</p></div>
+    </div>
+
+    <!-- PHP Database Examples -->
+    <div class="process" style="border-left-color: #1d4ed8; background: rgba(29,78,216,0.08); margin-top: 20px;">
+      <h4 style="color: #1d4ed8;"><i class="fab fa-php"></i> PHP Database Examples</h4>
+    </div>
+
+    <div class="example" data-example="php database students mysqli select fetch all table mit_ipt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>1. PHP - Student Records (10_database.php)</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/10_database.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run Live</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Full CRUD: Connect to <code>mit_ipt</code>, display all students from <code>students</code> table with <code>fetch_assoc()</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code</div>
+          <div class="editor" data-lang="php">&lt;?php
+require_once 'db_config.php';
+
+// Query all students
+$result = $conn->query("SELECT * FROM students ORDER BY id");
+
+echo "&lt;table&gt;";
+echo "&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Index&lt;/th&gt;&lt;th&gt;DOB&lt;/th&gt;&lt;th&gt;Contact&lt;/th&gt;&lt;/tr&gt;";
+while ($row = $result->fetch_assoc()) {
+  echo "&lt;tr&gt;";
+  echo "&lt;td&gt;{$row['id']}&lt;/td&gt;";
+  echo "&lt;td&gt;&lt;strong&gt;{$row['name']}&lt;/strong&gt;&lt;/td&gt;";
+  echo "&lt;td&gt;{$row['index_number']}&lt;/td&gt;";
+  echo "&lt;td&gt;{$row['dob']}&lt;/td&gt;";
+  echo "&lt;td&gt;{$row['contact']}&lt;/td&gt;";
+  echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+$conn->close();
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="php forms post students insert crud mit_ipt add search delete">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>2. PHP - Student CRUD (09_forms_post.php)</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/09_forms_post.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run Live</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Full CRUD operations: Add, Search, Delete students. Uses prepared statements, POST form handling, connects to <code>mit_ipt.students</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code (excerpt)</div>
+          <div class="editor" data-lang="php">&lt;?php
+require_once 'db_config.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $action = $_POST["action"];
+
+  // INSERT
+  if ($action == "add") {
+    $name = sanitize($conn, $_POST["name"]);
+    $index = sanitize($conn, $_POST["index_number"]);
+    $stmt = $conn->prepare("INSERT INTO students (name, index_number, dob, contact) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $index, $_POST["dob"], $_POST["contact"]);
+    $stmt->execute();
+  }
+
+  // SEARCH
+  if ($action == "search") {
+    $keyword = sanitize($conn, $_POST["keyword"]);
+    $stmt = $conn->prepare("SELECT * FROM students WHERE name LIKE ? OR index_number LIKE ?");
+    $like = "%$keyword%";
+    $stmt->bind_param("ss", $like, $like);
+    $stmt->execute();
+    $students = $stmt->get_result();
+  }
+
+  // DELETE
+  if ($action == "delete") {
+    $id = (int)$_POST["id"];
+    $conn->query("DELETE FROM students WHERE id = $id");
+  }
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="php forms get courses select search mit_ipt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>3. PHP - Course Search (08_forms_get.php)</h3>
+        <div class="actions">
+          <a class="btn-view" href="4_PHP/08_forms_get.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run Live</a>
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">GET form to list all courses and search by name/code. Connects to <code>mit_ipt.courses</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">PHP Code (excerpt)</div>
+          <div class="editor" data-lang="php">&lt;?php
+require_once 'db_config.php';
+
+if ($_GET["action"] == "list") {
+  $result = $conn->query("SELECT * FROM courses ORDER BY id");
+  while ($row = $result->fetch_assoc()) {
+    echo "&lt;tr&gt;&lt;td&gt;{$row['course_code']}&lt;/td&gt;";
+    echo "&lt;td&gt;{$row['course_name']}&lt;/td&gt;";
+    echo "&lt;td&gt;{$row['semester']}&lt;/td&gt;&lt;/tr&gt;";
+  }
+}
+
+if ($_GET["action"] == "search") {
+  $keyword = sanitize($conn, $_GET["q"]);
+  $stmt = $conn->prepare("SELECT * FROM courses WHERE course_name LIKE ? OR course_code LIKE ?");
+  $like = "%$keyword%";
+  $stmt->bind_param("ss", $like, $like);
+  $stmt->execute();
+  $result = $stmt->get_result();
+}
+?&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node.js Database Examples -->
+    <div class="process" style="border-left-color: #16a34a; background: rgba(22,163,74,0.08); margin-top: 20px;">
+      <h4 style="color: #16a34a;"><i class="fab fa-node-js"></i> Node.js Database Examples</h4>
+    </div>
+
+    <div class="example" data-example="nodejs mysql connection query students grades courses mit_ipt select">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>4. Node.js - MySQL Query All Tables (mysql.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/mysql.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Connects to <code>mit_ipt</code>, lists all tables, queries students, grades, and courses.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const mysql = require('mysql2');
+
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_ipt'
+});
+
+connection.connect((err) => {
+  if (err) { console.error(err); return; }
+  console.log('Connected to mit_ipt!');
+
+  // List tables
+  connection.query('SHOW TABLES', (err, results) => {
+    console.log('\nTables:');
+    results.forEach(r => console.log(' - ' + Object.values(r)[0]));
+  });
+
+  // Students
+  connection.query('SELECT * FROM students', (err, results) => {
+    console.log('\nStudents:');
+    results.forEach(r => console.log(`  ${r.id}. ${r.name} (${r.index_number})`));
+  });
+
+  // Grade Report
+  connection.query('SELECT name, average, grade FROM student_grades ORDER BY average DESC', (err, results) => {
+    console.log('\nGrade Report:');
+    results.forEach(r => console.log(`  ${r.name}: ${r.average} (${r.grade})`));
+    connection.end();
+  });
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs mysql create database table insert mit_ipt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>5. Node.js - Create Database & Table (mysql2.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/mysql2.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Create database, switch user, create table, INSERT, SELECT - full lifecycle.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var mysql = require('mysql2');
+var con = mysql.createConnection({
+  host: "localhost", user: "root", password: ""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+
+  con.changeUser({ database: 'mit_ipt' }, function(err) {
+    if (err) throw err;
+
+    // Create table
+    con.query(`CREATE TABLE IF NOT EXISTS employees (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100), department VARCHAR(50), salary DECIMAL(10,2)
+    )`, function(err) {
+      if (err) throw err;
+
+      // Insert
+      con.query("INSERT INTO employees (name, department, salary) VALUES (?, ?, ?)",
+        ['John Smith', 'IT', 75000], function(err, result) {
+          if (err) throw err;
+          console.log("Inserted ID: " + result.insertId);
+
+          // Select all
+          con.query("SELECT * FROM employees", function(err, results) {
+            results.forEach(r => console.log(`${r.name} - ${r.department} - $${r.salary}`));
+            con.end();
+          });
+      });
+    });
+  });
+});</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs express student grading mysql insert grade mit_ipt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>6. Node.js - Grading App + MySQL (student-grading.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student-grading.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Complete Express app: form → calculate grade → INSERT into <code>mit_ipt.student_grades</code> → view all records.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const app = express();
+
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_ipt'
+});
+
+connection.connect((err) => {
+  if (err) { console.error(err); return; }
+  console.log('Connected to mit_ipt');
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.get('/grades', (req, res) => {
+  connection.query('SELECT * FROM student_grades ORDER BY average DESC', (err, results) => {
+    if (err) { res.send('Error: ' + err.message); return; }
+    let html = '&lt;table border="1" cellpadding="8"&gt;';
+    html += '&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Avg&lt;/th&gt;&lt;th&gt;Grade&lt;/th&gt;&lt;/tr&gt;';
+    results.forEach(r => {
+      html += `&lt;tr&gt;&lt;td&gt;${r.name}&lt;/td&gt;&lt;td&gt;${r.average}&lt;/td&gt;&lt;td&gt;${r.grade}&lt;/td&gt;&lt;/tr&gt;`;
+    });
+    html += '&lt;/table&gt;&lt;a href="/"&gt;Back&lt;/a&gt;';
+    res.send(html);
+  });
+});
+
+app.post('/result', (req, res) => {
+  let { name, indexNumber } = req.body;
+  let maths = parseFloat(req.body.maths);
+  let english = parseFloat(req.body.english);
+  let sciences = parseFloat(req.body.sciences);
+  let avg = ((maths + english + sciences) / 3).toFixed(2);
+  let grade = avg >= 80 ? 'A' : avg >= 70 ? 'B' : avg >= 60 ? 'C' : avg >= 50 ? 'D' : avg >= 40 ? 'E' : 'F';
+
+  connection.query(
+    'INSERT INTO student_grades (name, index_number, maths, english, sciences, average, grade) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [name, indexNumber, maths, english, sciences, avg, grade],
+    (err) => {
+      if (err) { res.send('Error: ' + err.message); return; }
+      res.send(`Saved! ${name}: ${avg} (${grade}) &lt;a href="/grades"&gt;View All&lt;/a&gt;`);
+    }
+  );
+});
+
+app.listen(8080);</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs express student grade file database both save mit_ipt">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>7. Node.js - Grade Data: File + DB (student_grade_data.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/student_grade_data.js" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Dual save: writes to <code>myfile.txt</code> AND inserts into <code>mit_ipt.student_grades</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_ipt'
+});
+connection.connect(() => console.log('Connected to mit_ipt'));
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/result', (req, res) => {
+  const { name, indexNumber, maths, english, sciences } = req.body;
+  const avg = ((parseFloat(maths) + parseFloat(english) + parseFloat(sciences)) / 3).toFixed(2);
+  const grade = avg >= 80 ? 'A' : avg >= 70 ? 'B' : avg >= 60 ? 'C' : avg >= 50 ? 'D' : 'F';
+
+  // Save to file
+  const line = `${name}\t${indexNumber}\t${maths}\t${english}\t${sciences}\t${avg}\t${grade}\n`;
+  fs.appendFileSync(path.join(__dirname, 'myfile.txt'), line);
+
+  // Save to database
+  connection.query(
+    'INSERT INTO student_grades (name, index_number, maths, english, sciences, average, grade) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [name, indexNumber, maths, english, sciences, avg, grade],
+    (err) => {
+      if (err) { res.send('Error: ' + err.message); return; }
+      res.send(`Saved to file + DB! Avg: ${avg}, Grade: ${grade}`);
+    }
+  );
+});
+
+app.listen(3001);</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs filewrite express form student grades mit_ipt file append">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>8. Node.js - FileWrite + DB (filewrite-sir)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Code</button>
+          <a class="btn-view" href="prof_examples/filewrite-sir" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Professor's file write example, upgraded to also save to <code>mit_ipt.student_grades</code>.</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Node.js Code</div>
+          <div class="editor" data-lang="javascript">var fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const app = express();
+
+const connection = mysql.createConnection({
+  host: 'localhost', user: 'root', password: '', database: 'mit_ipt'
+});
+connection.connect(() => console.log('Connected to mit_ipt'));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res) => { res.sendFile(__dirname + '/form.html'); });
+
+app.post('/example', (req, res) => {
+  let { fname, index, math, science, english } = req.body;
+  let avg = ((parseInt(math) + parseInt(science) + parseInt(english)) / 3).toFixed(2);
+  let grade = avg >= 80 ? 'A' : avg >= 70 ? 'B' : avg >= 60 ? 'C' : avg >= 50 ? 'D' : 'F';
+
+  // File
+  fs.appendFile('myfile.txt', `${fname} ${index} ${math} ${science} ${english}\n`, (err) => {
+    if (err) throw err;
+  });
+
+  // Database
+  connection.query(
+    'INSERT INTO student_grades (name, index_number, maths, english, sciences, average, grade) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [fname, index, math, english, science, avg, grade],
+    (err) => {
+      if (err) { res.send('DB Error: ' + err.message); return; }
+      res.send(`Saved! ${fname}: Avg=${avg}, Grade=${grade}`);
+    }
+  );
+});
+
+app.listen(8081);</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="process" style="border-left-color: #ca8a04; background: rgba(202,138,4,0.08); margin-top: 20px;">
+      <h4 style="color: #ca8a04;"><i class="fas fa-tools"></i> Utility</h4>
+    </div>
+
+    <div class="example" data-example="database setup create seed tables mit_ipt php admin">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>9. Database Setup & Seed (db_setup.php)</h3>
+        <div class="actions">
+          <a class="btn-view" href="db_setup.php" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Run Live</a>
+          <a class="btn-view" href="db_config.php" target="_blank" onclick="event.stopPropagation()" style="background:#6d28d9;">Config</a>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Reset database (drop + create tables), seed sample data. Shows table info, column names, row counts.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODULE 8: HOW TO RUN ========== -->
+<div class="module" data-module="m8" style="border: 2px solid #14b8a6;">
+  <div class="module-header" onclick="toggleModule(this)" style="background: linear-gradient(135deg, #0d9488, #14b8a6, #0f766e);">
+    <h2><i class="fas fa-terminal"></i> Module 8: How to Run (VS Code + WAMP/XAMPP)</h2>
+    <div class="meta"><span class="badge">Setup</span><span class="arrow">&#9660;</span></div>
+  </div>
+  <div class="module-body">
+
+    <!-- ============ NODE.JS SECTION ============ -->
+    <div class="process" style="border-left-color: #16a34a; background: rgba(22,163,74,0.08);">
+      <h4 style="color: #16a34a;"><i class="fab fa-node-js"></i> Part A: Running Node.js Examples in VS Code</h4>
+    </div>
+
+    <div class="example" data-example="nodejs setup prerequisites install vscode terminal run">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 1: Prerequisites</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">Requirements</div>
+          <div class="editor" data-lang="text">1. Install Node.js from https://nodejs.org (LTS version)
+   - This also installs npm (Node Package Manager)
+
+2. Install Visual Studio Code from https://code.visualstudio.com
+
+3. Open the project folder in VS Code:
+   - File → Open Folder → D:\WAMP26\www\mit\implementations
+
+4. Open VS Code integrated terminal:
+   - Menu: Terminal → New Terminal
+   - OR press: Ctrl + ` (backtick key)
+   - The terminal opens at: D:\WAMP26\www\mit\implementations</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs npm install dependencies packages node_modules">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 2: Install npm Packages (One-time Setup)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Run this ONCE in VS Code terminal to install all required Node.js packages:</div>
+        <div class="editor-wrap">
+          <div class="editor-label">VS Code Terminal Commands</div>
+          <div class="editor" data-lang="bash"># Navigate to project folder
+cd D:\WAMP26\www\mit\implementations
+
+# If PowerShell blocks scripts, run this first:
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# Install all dependencies (express, body-parser, mysql, mysql2)
+npm install
+
+# You will see "added 92 packages" when done
+# This creates a node_modules/ folder — do NOT delete it</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs run simple javascript file terminal">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 3: Run Simple Node.js Files (.js)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">For files that DON'T use Express server (file operations, simple scripts):</div>
+        <div class="editor-wrap">
+          <div class="editor-label">VS Code Terminal</div>
+          <div class="editor" data-lang="bash"># --- File Operations Example ---
+cd D:\WAMP26\www\mit\implementations\3_JavaScript
+node 11_file_operations.js
+# Output: File created, file content read
+
+# --- Simple JS Scripts ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node file_create.js
+# Creates myfile.txt
+
+# --- MySQL Query (no server, just CLI) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node mysql.js
+# Output: Lists all tables and students from mit_ipt
+
+# --- MySQL Create DB + Table ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node mysql2.js
+# Output: Creates employees table, inserts records</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs express server start run browser localhost port">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 4: Run Express Server Apps (Browser Access)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">For Express apps with HTML forms — runs a local server, opens in browser:</div>
+        <div class="editor-wrap">
+          <div class="editor-label">VS Code Terminal</div>
+          <div class="editor" data-lang="bash"># --- Student Grading App (Port 8080) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node student-grading.js
+# Output: "Connected to mit_ipt database" + "Server running on port 8080"
+# Open browser: http://localhost:8080
+
+# --- Student Grade Data (Port 3001) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node student_grade_data.js
+# Output: "Connected to mit_ipt" + "Server running on port 3001"
+# Open browser: http://localhost:3001
+
+# --- FileWrite + DB (Port 8081) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node filewrite-sir
+# Output: "Connected to mit_ipt" + "Server running on port 8081"
+# Open browser: http://localhost:8081
+
+# --- Express Server (Port 3000) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node server2.js
+# Open browser: http://localhost:3000
+
+# --- Form Handling Server (Port 3000) ---
+cd D:\WAMP26\www\mit\implementations\prof_examples
+node express_body_parse.js
+# Open browser: http://localhost:3000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="nodejs stop server ctrl c kill process port">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 5: Stop a Running Server</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">VS Code Terminal</div>
+          <div class="editor" data-lang="bash"># Stop the running server:
+# Press: Ctrl + C (in the terminal)
+
+# If a port is stuck (e.g., "EADDRINUSE: port 8080 already in use"):
+# Find the process using the port:
+netstat -ano | findstr :8080
+
+# Kill it by PID (replace 12345 with the PID number):
+taskkill /PID 12345 /F</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PHP / WAMP SECTION ============ -->
+    <div class="process" style="border-left-color: #1d4ed8; background: rgba(29,78,216,0.08); margin-top: 24px;">
+      <h4 style="color: #1d4ed8;"><i class="fab fa-php"></i> Part B: Running PHP Examples with WAMP Server</h4>
+    </div>
+
+    <div class="example" data-example="wamp start server apache mysql php setup install">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 1: Start WAMP Server</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">WAMP Setup</div>
+          <div class="editor" data-lang="text">1. WAMP is installed at: D:\WAMP26
+
+2. Start WAMP:
+   - Double-click: D:\WAMP26\wampmanager.exe
+   - OR from Start Menu: search "WampServer" → click it
+   - Wait for the tray icon to turn GREEN (all services running)
+
+3. Verify services are running:
+   - Apache (web server) → serves PHP files
+   - MySQL (database)  → stores/queries data
+   - Green icon = everything OK
+   - Orange/Red = one service failed (click icon → Restart All Services)
+
+4. Access WAMP menu from system tray:
+   - Left-click the WAMP icon (green/red/yellow "W")
+   - Quick access: Localhost, phpMyAdmin, www folder</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp www folder php files location path browser">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 2: Understanding the www Folder (Document Root)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">File Structure</div>
+          <div class="editor" data-lang="text">WAMP Document Root: D:\WAMP26\www\
+
+  Any file you put in "www" folder is accessible via browser.
+
+  Mapping:  File Path                          →  Browser URL
+  ──────────────────────────────────────────────────────────────
+  D:\WAMP26\www\test.html                    →  http://localhost/test.html
+  D:\WAMP26\www\mit\test.php                →  http://localhost/mit/test.php
+  D:\WAMP26\www\mit\implementations\index.html →  http://localhost/mit/implementations/index.html
+
+  Our project lives at: D:\WAMP26\www\mit\implementations\
+  Access it at:         http://localhost/mit/implementations/</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp run php browser localhost direct http access">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 3: Run PHP Files in Browser</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Open these URLs in your browser (WAMP must be running):</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Browser URLs</div>
+          <div class="editor" data-lang="text"># Main index (all examples with live editors):
+http://localhost/mit/implementations/
+
+# PHP Module Examples:
+http://localhost/mit/implementations/4_PHP/01_hello_world.php
+http://localhost/mit/implementations/4_PHP/02_variables.php
+http://localhost/mit/implementations/4_PHP/03_operators.php
+http://localhost/mit/implementations/4_PHP/04_conditionals.php
+http://localhost/mit/implementations/4_PHP/05_arrays.php
+http://localhost/mit/implementations/4_PHP/06_loops.php
+http://localhost/mit/implementations/4_PHP/07_functions.php
+
+# PHP + Database Examples (require MySQL):
+http://localhost/mit/implementations/4_PHP/08_forms_get.php
+http://localhost/mit/implementations/4_PHP/09_forms_post.php
+http://localhost/mit/implementations/4_PHP/10_database.php
+
+# Database Setup (create tables + seed data):
+http://localhost/mit/implementations/db_setup.php</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp mysql database setup seed phpmyadmin php setup tables">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 4: Setup MySQL Database</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="desc">Database <code>mit_ipt</code> must exist before PHP database examples work:</div>
+        <div class="editor-wrap">
+          <div class="editor-label">Option A: Browser (Easiest)</div>
+          <div class="editor" data-lang="text">1. Open: http://localhost/mit/implementations/db_setup.php
+2. Click "Reset Database" → creates all 6 tables
+3. Click "Seed Sample Data" → fills tables with sample records
+4. Done! All PHP database pages now work.</div>
+        </div>
+        <div class="editor-wrap" style="margin-top:8px;">
+          <div class="editor-label">Option B: phpMyAdmin</div>
+          <div class="editor" data-lang="text">1. Open: http://localhost/phpmyadmin
+2. Login: username = root, password = (leave empty)
+3. Click "SQL" tab at the top
+4. Paste: CREATE DATABASE IF NOT EXISTS mit_ipt;
+5. Click "Go" to execute
+6. Then open: http://localhost/mit/implementations/db_setup.php
+7. Click "Reset Database" then "Seed Sample Data"</div>
+        </div>
+        <div class="editor-wrap" style="margin-top:8px;">
+          <div class="editor-label">Option C: MySQL Command Line</div>
+          <div class="editor" data-lang="bash"># Open terminal and navigate to MySQL bin:
+cd D:\WAMP26\bin\mysql\mysql8.4.7\bin
+
+# Login:
+mysql.exe -u root
+
+# Create database:
+CREATE DATABASE mit_ipt;
+EXIT;
+
+# Then open db_setup.php in browser to create tables</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp xampp alternative comparison php server setup">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 5: Using XAMPP Instead of WAMP</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">XAMPP Setup</div>
+          <div class="editor" data-lang="text">If you use XAMPP instead of WAMP:
+
+1. Install XAMPP from https://www.apachefriends.org
+   Default location: C:\xampp
+
+2. Start XAMPP Control Panel:
+   - Start Menu → search "XAMPP Control Panel"
+   - Click "Start" next to Apache
+   - Click "Start" next to MySQL
+
+3. Copy project to XAMPP document root:
+   - XAMPP root: C:\xampp\htdocs\
+   - Copy: D:\WAMP26\www\mit\  →  C:\xampp\htdocs\mit\
+
+4. Access in browser:
+   http://localhost/mit/implementations/
+
+5. phpMyAdmin:
+   http://localhost/phpmyadmin
+
+6. MySQL credentials (default XAMPP):
+   Host: localhost | User: root | Password: (empty)
+
+NOTE: Same PHP code works on both WAMP and XAMPP.
+      Only the document root folder differs:
+      - WAMP:  D:\WAMP26\www\
+      - XAMPP: C:\xampp\htdocs\</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp php command line cli run without server">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 6: Run PHP from Command Line (Optional)</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">PowerShell / Terminal</div>
+          <div class="editor" data-lang="bash"># PHP can also run from command line (no browser needed):
+
+# Check PHP version:
+D:\WAMP26\bin\php\php8.0.30\php.exe -v
+
+# Run a PHP file from CLI:
+D:\WAMP26\bin\php\php8.0.30\php.exe D:\WAMP26\www\mit\implementations\4_PHP\01_hello_world.php
+
+# Syntax check (find errors without running):
+D:\WAMP26\bin\php\php8.0.30\php.exe -l D:\WAMP26\www\mit\implementations\4_PHP\10_database.php
+
+# Start PHP built-in dev server (alternative to WAMP):
+cd D:\WAMP26\www\mit\implementations
+D:\WAMP26\bin\php\php8.0.30\php.exe -S localhost:8080
+# Then open: http://localhost:8080/</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example" data-example="wamp troubleshoot fix common errors port conflict apache mysql">
+      <div class="example-head" onclick="toggleExample(this)">
+        <h3>Step 7: Common Errors & Fixes</h3>
+        <div class="actions">
+          <button class="btn-code" onclick="event.stopPropagation(); toggleCode(this)">Details</button>
+        </div>
+      </div>
+      <div class="example-body">
+        <div class="editor-wrap">
+          <div class="editor-label">Troubleshooting</div>
+          <div class="editor" data-lang="text">PROBLEM: "localhost refused to connect"
+  FIX: WAMP is not running → Start wampmanager.exe, wait for green icon
+
+PROBLEM: WAMP icon is ORANGE or RED
+  FIX: Left-click icon → "Restart All Services"
+  FIX: Port conflict → Click icon → Apache → Test Port 80
+
+PROBLEM: "Connection failed" on PHP database pages
+  FIX: MySQL is not running → WAMP icon → MySQL → Start Service
+  FIX: Database mit_ipt doesn't exist → Open db_setup.php → click Reset
+
+PROBLEM: PHP file downloads instead of running
+  FIX: WAMP Apache is not serving → restart WAMP
+
+PROBLEM: "Object.values is not a function" on db_setup.php
+  FIXED: This was a bug (JS syntax in PHP), already corrected
+
+PROBLEM: PHP files in 4_PHP/ can't find db_config.php
+  FIXED: Already uses __DIR__ . '/../db_config.php'
+
+PROBLEM: Node.js "EADDRINUSE" port already in use
+  FIX: netstat -ano | findstr :8080
+  FIX: taskkill /PID [number] /F</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- container -->
+
+<div class="footer">
+  <p>MIT 219 - Integrative Programming &amp; Technologies | 75+ Examples (42 Course + 33 Practicle Code)</p>
+</div>
+
+<script>
+// Store all CodeMirror instances keyed by their wrapper
+const editorMap = new WeakMap();
+const allCMs = [];
+
+// Module toggles
+function toggleModule(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.arrow');
+  body.classList.toggle('active');
+  arrow.classList.toggle('open');
+  // Refresh any CodeMirror editors that just became visible
+  setTimeout(() => refreshVisibleCMs(), 50);
+}
+
+// Example toggles
+function toggleExample(head) {
+  const body = head.nextElementSibling;
+  body.classList.toggle('active');
+  // Refresh CodeMirror editors in this example when opened
+  if (body.classList.contains('active')) {
+    setTimeout(() => {
+      body.querySelectorAll('.CodeMirror').forEach(cm => {
+        if (cm.CodeMirror) cm.CodeMirror.refresh();
+      });
+    }, 50);
+  }
+}
+
+// Refresh all visible CodeMirror editors
+function refreshVisibleCMs() {
+  allCMs.forEach(cm => {
+    const el = cm.getWrapperElement();
+    if (el.offsetParent !== null) {
+      cm.refresh();
+    }
+  });
+}
+
+// Filter modules
+function filterModule(mod, btn) {
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.module').forEach(m => {
+    if (mod === 'all' || m.dataset.module === mod) {
+      m.classList.remove('hidden');
+      const body = m.querySelector('.module-body');
+      const arrow = m.querySelector('.arrow');
+      if (!body.classList.contains('active')) {
+        body.classList.add('active');
+        arrow.classList.add('open');
+      }
+    } else {
+      m.classList.add('hidden');
+    }
+  });
+  setTimeout(() => refreshVisibleCMs(), 100);
+}
+
+// Search
+function searchExamples(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.module').forEach(m => {
+    let hasVisible = false;
+    m.querySelectorAll('.example').forEach(ex => {
+      const text = (ex.dataset.example + ' ' + ex.textContent).toLowerCase();
+      if (!q || text.includes(q)) {
+        ex.classList.remove('hidden');
+        hasVisible = true;
+      } else {
+        ex.classList.add('hidden');
+      }
+    });
+    if (hasVisible && q) {
+      m.classList.remove('hidden');
+      m.querySelector('.module-body').classList.add('active');
+      m.querySelector('.arrow').classList.add('open');
+    } else if (!hasVisible && q) {
+      m.classList.add('hidden');
+    }
+  });
+  setTimeout(() => refreshVisibleCMs(), 100);
+}
+
+// Initialize CodeMirror editors
+document.querySelectorAll('.editor').forEach(el => {
+  const lang = el.dataset.lang || 'javascript';
+  const rawCode = el.textContent.trim();
+  el.textContent = '';
+  const cm = CodeMirror(el, {
+    value: rawCode,
+    mode: lang,
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: false,
+    lineWrapping: true,
+    tabSize: 2,
+    indentWithTabs: false,
+    extraKeys: {
+      'Ctrl-Enter': function() { runBtnForEditor(el); },
+      'Cmd-Enter': function() { runBtnForEditor(el); }
+    }
+  });
+  editorMap.set(el, cm);
+  allCMs.push(cm);
+});
+
+// Find and click the Run button for a given editor element
+function runBtnForEditor(editorEl) {
+  const example = editorEl.closest('.example');
+  if (!example) return;
+  const runBtn = example.querySelector('.btn-run');
+  if (runBtn) runBtn.click();
+}
+
+// Run code
+function runCode(btn, type) {
+  const example = btn.closest('.example');
+  if (!example) return;
+
+  // Find the CodeMirror instance
+  const cmEl = example.querySelector('.editor');
+  if (!cmEl) return;
+  const cm = editorMap.get(cmEl);
+  if (!cm) return;
+  const code = cm.getValue();
+
+  if (type === 'js') {
+    const outputArea = example.querySelector('.output-area');
+    if (!outputArea) return;
+    outputArea.textContent = '';
+    outputArea.classList.remove('error');
+
+    // Capture console.log
+    const logs = [];
+    const origLog = console.log;
+    const origWarn = console.warn;
+    const origError = console.error;
+    console.log = function() {
+      const args = Array.from(arguments);
+      logs.push(args.map(a => {
+        if (typeof a === 'object') {
+          try { return JSON.stringify(a, null, 2); } catch(e) { return String(a); }
+        }
+        return String(a);
+      }).join(' '));
+    };
+    console.warn = console.log;
+    console.error = console.log;
+
+    try {
+      // Redirect document.write to output
+      const origWrite = document.write;
+      const origWriteln = document.writeln;
+      let writeBuffer = '';
+      document.write = function(s) { writeBuffer += s; };
+      document.writeln = function(s) { writeBuffer += s + '\n'; };
+
+      const result = new Function(code)();
+
+      // Restore
+      document.write = origWrite;
+      document.writeln = origWriteln;
+
+      if (writeBuffer) {
+        outputArea.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.minHeight = '100px';
+        iframe.style.border = 'none';
+        iframe.style.background = '#fff';
+        outputArea.appendChild(iframe);
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html><head></head><body style="margin:12px;font-family:sans-serif;">' + writeBuffer + '</body></html>');
+        doc.close();
+        // Auto-resize iframe
+        setTimeout(() => {
+          try { iframe.style.height = iframe.contentDocument.body.scrollHeight + 20 + 'px'; } catch(e) {}
+        }, 100);
+      }
+
+      if (logs.length) {
+        outputArea.innerHTML += '<pre style="margin:8px 0;padding:8px;background:#1a1a2e;color:#34d399;border-radius:4px;font-size:0.85em;white-space:pre-wrap;">' + logs.join('\n') + '</pre>';
+      }
+
+      if (result !== undefined && typeof result !== 'object') {
+        outputArea.innerHTML += '<pre style="margin:8px 0;padding:8px;background:#1a1a2e;color:#fbbf24;border-radius:4px;font-size:0.85em;">&#8594; ' + String(result) + '</pre>';
+      }
+    } catch (err) {
+      outputArea.innerHTML = '<pre style="padding:12px;background:#1a0000;color:#f87171;border-radius:4px;font-size:0.85em;border:1px solid #f87171;">Error: ' + escapeHtml(err.message) + '</pre>';
+    }
+
+    console.log = origLog;
+    console.warn = origWarn;
+    console.error = origError;
+  }
+  else if (type === 'html' || type === 'xml') {
+    const preview = example.querySelector('.preview-area');
+    if (!preview) return;
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.minHeight = '200px';
+    iframe.style.border = 'none';
+    iframe.style.borderRadius = '4px';
+    preview.innerHTML = '';
+    preview.appendChild(iframe);
+
+    // Use srcdoc with blob URL for proper script execution
+    const fullHtml = type === 'html' ? code : '<pre style="color:#333;font-size:14px;padding:16px;font-family:monospace;">' + escapeHtml(code) + '</pre>';
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    iframe.onload = function() {
+      URL.revokeObjectURL(url);
+      // Auto-resize
+      try { iframe.style.height = iframe.contentDocument.body.scrollHeight + 20 + 'px'; } catch(e) {}
+    };
+    iframe.src = url;
+  }
+}
+
+// Toggle code visibility
+function toggleCode(btn) {
+  const example = btn.closest('.example');
+  if (!example) return;
+  const body = example.querySelector('.example-body');
+  if (!body) return;
+  body.classList.toggle('active');
+  // Refresh editors when showing
+  if (body.classList.contains('active')) {
+    setTimeout(() => {
+      body.querySelectorAll('.CodeMirror').forEach(cm => {
+        if (cm.CodeMirror) cm.CodeMirror.refresh();
+      });
+    }, 50);
+  }
+}
+
+// Escape HTML for safe display
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// Initialize: open first module
+document.querySelector('.module-body').classList.add('active');
+document.querySelector('.arrow').classList.add('open');
+
+// Refresh all editors after DOM is ready
+setTimeout(() => refreshVisibleCMs(), 200);
+</script>
+
+</body>
+</html>

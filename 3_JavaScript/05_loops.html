@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05 - Loops</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Loops</h1>
+
+    <h2>1. While Loop - Sum of 1 to 100</h2>
+    <button onclick="sumToHundred()">Calculate</button>
+    <div class="output" id="sumOutput"></div>
+
+    <h2>2. While Loop - Sum of Odd Numbers</h2>
+    <button onclick="sumOdd()">Calculate</button>
+    <div class="output" id="oddOutput"></div>
+
+    <h2>3. For Loop - Print 1 to 10</h2>
+    <button onclick="printOneToTen()">Run</button>
+    <div class="output" id="forOutput"></div>
+
+    <script>
+        // --- While Loop: Sum 1 to 100 ---
+        function sumToHundred() {
+            var sum = 0;
+            var i = 1;
+            while (i <= 100) {
+                sum += i;
+                i++;
+            }
+            document.getElementById("sumOutput").textContent =
+                "Sum of numbers from 1 to 100 = " + sum;
+        }
+
+        // --- While Loop: Sum of odd numbers ---
+        function sumOdd() {
+            var sum = 0;
+            var i = 1;
+            while (i <= 100) {
+                sum += i;
+                i += 2; // skip to next odd number
+            }
+            document.getElementById("oddOutput").textContent =
+                "Sum of odd numbers from 1 to 100 = " + sum;
+        }
+
+        // --- For Loop: Print 1 to 10 ---
+        function printOneToTen() {
+            var result = "";
+            for (var i = 1; i <= 10; i++) {
+                result += i + "\n";
+            }
+            document.getElementById("forOutput").textContent = result;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07 - Functions</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        input { padding: 8px 12px; margin: 5px; font-size: 14px; width: 100px; }
+        button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Functions</h1>
+
+    <h2>1. Function Declaration - square(x)</h2>
+    <p>Enter a number to square:</p>
+    <input type="number" id="squareInput" placeholder="Number">
+    <button onclick="squareNumber()">Square it</button>
+    <div class="output" id="squareOutput"></div>
+
+    <h2>2. Function - sum(num1, num2)</h2>
+    <p>Enter two numbers:</p>
+    <input type="number" id="num1" placeholder="Num 1">
+    <input type="number" id="num2" placeholder="Num 2">
+    <button onclick="calculateSum()">Sum</button>
+    <div class="output" id="sumOutput"></div>
+
+    <h2>3. Function - sum_of_squares</h2>
+    <p>Enter two numbers:</p>
+    <input type="number" id="sq1" placeholder="Num 1">
+    <input type="number" id="sq2" placeholder="Num 2">
+    <button onclick="calculateSumOfSquares()">Calculate</button>
+    <div class="output" id="sqOutput"></div>
+
+    <h2>4. Input Processing with getElementById</h2>
+    <p>Enter your name and age:</p>
+    <input type="text" id="userName" placeholder="Name">
+    <input type="number" id="userAge" placeholder="Age">
+    <button onclick="processInput()">Submit</button>
+    <div class="output" id="processOutput"></div>
+
+    <script>
+        // --- square(x) ---
+        function square(x) {
+            return x * x;
+        }
+
+        function squareNumber() {
+            var x = parseFloat(document.getElementById("squareInput").value);
+            document.getElementById("squareOutput").textContent =
+                "square(" + x + ") = " + square(x);
+        }
+
+        // --- sum(num1, num2) ---
+        function sum(num1, num2) {
+            return num1 + num2;
+        }
+
+        function calculateSum() {
+            var n1 = parseFloat(document.getElementById("num1").value);
+            var n2 = parseFloat(document.getElementById("num2").value);
+            document.getElementById("sumOutput").textContent =
+                "sum(" + n1 + ", " + n2 + ") = " + sum(n1, n2);
+        }
+
+        // --- sum_of_squares ---
+        function sum_of_squares(a, b) {
+            return square(a) + square(b);
+        }
+
+        function calculateSumOfSquares() {
+            var a = parseFloat(document.getElementById("sq1").value);
+            var b = parseFloat(document.getElementById("sq2").value);
+            document.getElementById("sqOutput").textContent =
+                "sum_of_squares(" + a + ", " + b + ") = " + sum_of_squares(a, b);
+        }
+
+        // --- Input processing with getElementById ---
+        function processInput() {
+            var name = document.getElementById("userName").value;
+            var age = document.getElementById("userAge").value;
+            var output = "Name: " + name + "\n";
+            output += "Age: " + age + "\n";
+            output += "In 10 years, " + name + " will be " + (parseInt(age) + 10) + " years old.";
+            document.getElementById("processOutput").textContent = output;
+        }
+    </script>
+</body>
+</html>

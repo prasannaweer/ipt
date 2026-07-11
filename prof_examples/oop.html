@@ -1,0 +1,31 @@
+<h1>Inheritance in JavaScript</h1>
+        <p id="demo"></p>
+        <script>
+            class Person {
+                constructor(fname, lname, dob, contact) {
+                    this.fname = fname;
+                    this.lname = lname;
+                    this.dob = dob;
+                    this.contact = contact;
+                }
+                fullname() {
+                    return this.fname + " " + this.lname;
+                }
+            }
+
+            class Student extends Person {
+                constructor(fname, lname, dob, regNo, contact) {
+                    super(fname, lname, dob, contact);
+                    this.regNo = regNo;
+                    
+                }
+                displayInfo() {
+                    return "Full Name: " + this.fullname() + "<br>Date of Birth: " + this.dob + "<br>Registration Number: " + this.regNo + "<br>Contact: " + this.contact;
+                }
+            }
+var st1 = new Student("John", "Doe", "2003-01-15", "REG001", "123-456-7890");
+            var st2 = new Student("Jane", "Smith", "2004-02-20", "REG002", "987-654-3210");
+            var st3 = new Student("Alice", "Johnson", "2005-03-10", "REG003", "555-123-4567");
+
+            document.getElementById("demo").innerHTML = st1.displayInfo() + "<br><br>" + st2.displayInfo() + "<br><br>" + st3.displayInfo();
+        </script>

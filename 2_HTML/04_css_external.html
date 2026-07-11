@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04 - External CSS Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; margin: 12px 0; }
+    </style>
+</head>
+<body>
+
+<h1>04 &mdash; External CSS Example</h1>
+<p>External CSS keeps styles in a separate <code>.css</code> file, shared across multiple HTML pages.</p>
+
+<div style="background:#fff; border:1px solid #ddd; border-radius:6px; padding:18px 22px; margin:14px 0;">
+    <h3 style="color:#0d47a1;">Linking an External Stylesheet</h3>
+    <pre>&lt;head&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</pre>
+</div>
+
+<div style="background:#fff; border:1px solid #ddd; border-radius:6px; padding:18px 22px; margin:14px 0;">
+    <h3 style="color:#0d47a1;">Benefits</h3>
+    <ul>
+        <li>Single file controls the look of many pages &mdash; easy to maintain.</li>
+        <li>Browsers cache the CSS file, so subsequent pages load faster.</li>
+        <li>Cleaner HTML &mdash; no inline or internal style blocks.</li>
+    </ul>
+</div>
+
+<!-- Elements styled by the external styles.css file -->
+<h2 class="section-title">Elements Styled by styles.css</h2>
+<div class="card">
+    <p>This card, this heading, and other elements below are styled entirely by the external <code>styles.css</code> file.</p>
+</div>
+
+<div class="card highlight">
+    <p>This card uses a modifier class <code>.highlight</code> to change its appearance, still defined in the external file.</p>
+</div>
+
+<button class="btn">External CSS Button</button>
+<button class="btn btn-secondary">Secondary Button</button>
+
+<p class="footer-note">Check the <code>styles.css</code> file alongside this HTML to see how the styles are defined.</p>
+
+</body>
+</html>

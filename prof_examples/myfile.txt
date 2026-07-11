@@ -1,0 +1,18 @@
+name: Sampath
+indexNumber: 679
+maths: 67
+english: 69
+sciences: 58[2026-07-04T04:59:26.735Z]
+name: Sampath
+indexNumber: 679
+maths: 67
+english: 69
+sciences: 58
+==================================================
+[2026-07-04T05:00:04.466Z]
+name: Janaka
+indexNumber: 676
+maths: 76
+english: 77
+sciences: 59
+==================================================

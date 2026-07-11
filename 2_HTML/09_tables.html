@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09 - HTML Tables</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.88em; margin: 12px 0; }
+        .example-box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example-box h3 { color: #0d47a1; margin-bottom: 10px; }
+        table { border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #999; padding: 8px 14px; }
+        th { background: #1a237e; color: #fff; }
+    </style>
+</head>
+<body>
+
+<h1>09 &mdash; HTML Tables</h1>
+
+<!-- ===================== SIMPLE TABLE ===================== -->
+<div class="example-box">
+    <h3>Simple Table with BORDER</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice</td>
+            <td>A</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Bob</td>
+            <td>B+</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Charlie</td>
+            <td>A-</td>
+        </tr>
+    </table>
+    <pre>&lt;table border="1" cellpadding="8" cellspacing="0"&gt;
+    &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;Name&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;1&lt;/td&gt;
+        &lt;td&gt;Alice&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</pre>
+</div>
+
+<!-- ===================== COLSPAN & ROWSPAN ===================== -->
+<div class="example-box">
+    <h3>COLSPAN &amp; ROWSPAN</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+        <tr>
+            <th colspan="3">Student Report</th>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Score</th>
+        </tr>
+        <tr>
+            <td rowspan="2">Alice</td>
+            <td>Math</td>
+            <td>92</td>
+        </tr>
+        <tr>
+            <td>Science</td>
+            <td>88</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Bob</td>
+            <td>Math</td>
+            <td>78</td>
+        </tr>
+        <tr>
+            <td>Science</td>
+            <td>85</td>
+        </tr>
+    </table>
+    <pre>&lt;table border="1"&gt;
+    &lt;tr&gt;
+        &lt;th colspan="3"&gt;Student Report&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td rowspan="2"&gt;Alice&lt;/td&gt;
+        &lt;td&gt;Math&lt;/td&gt;
+        &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Science&lt;/td&gt;
+        &lt;td&gt;88&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</pre>
+</div>
+
+<!-- ===================== CELL SPACING & PADDING ===================== -->
+<div class="example-box">
+    <h3>Cell Spacing &amp; Padding</h3>
+    <p><strong>cellspacing</strong> controls the gap between cells. <strong>cellpadding</strong> controls the space inside each cell.</p>
+    <table border="1" cellspacing="6" cellpadding="12">
+        <tr><th>Feature</th><th>cellspacing</th><th>cellpadding</th></tr>
+        <tr><td>Purpose</td><td>Gap between cells</td><td>Space inside cells</td></tr>
+        <tr><td>Default</td><td>2px</td><td>1px</td></tr>
+    </table>
+    <pre>&lt;table border="1" cellspacing="6" cellpadding="12"&gt;
+    &lt;tr&gt;&lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</pre>
+</div>
+
+<!-- ===================== THEAD, TBODY, TFOOT ===================== -->
+<div class="example-box">
+    <h3>THEAD, TBODY, TFOOT</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background:#1a237e; color:#fff;">
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pen</td>
+                <td>10</td>
+                <td>$2.50</td>
+            </tr>
+            <tr>
+                <td>Notebook</td>
+                <td>5</td>
+                <td>$8.00</td>
+            </tr>
+            <tr>
+                <td>Pencil</td>
+                <td>20</td>
+                <td>$0.50</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr style="background:#e8eaf6; font-weight:bold;">
+                <td colspan="2">Total</td>
+                <td>$55.00</td>
+            </tr>
+        </tfoot>
+    </table>
+    <pre>&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;&lt;th&gt;Item&lt;/th&gt;&lt;th&gt;Qty&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;&lt;td&gt;Pen&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;$2.50&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;&lt;td colspan="2"&gt;Total&lt;/td&gt;&lt;td&gt;$55.00&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;</pre>
+</div>
+
+<!-- ===================== COLGROUP ===================== -->
+<div class="example-box">
+    <h3>COLGROUP</h3>
+    <p><code>&lt;colgroup&gt;</code> defines column-level styles without repeating attributes on each cell.</p>
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+        <colgroup>
+            <col span="2" style="background-color: #e3f2fd;">
+            <col style="background-color: #fff9c4;">
+        </colgroup>
+        <tr>
+            <th>Col 1</th>
+            <th>Col 2</th>
+            <th>Col 3 (highlighted)</th>
+        </tr>
+        <tr>
+            <td>A</td>
+            <td>B</td>
+            <td>C</td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>E</td>
+            <td>F</td>
+        </tr>
+    </table>
+    <pre>&lt;table&gt;
+    &lt;colgroup&gt;
+        &lt;col span="2" style="background-color: #e3f2fd;"&gt;
+        &lt;col style="background-color: #fff9c4;"&gt;
+    &lt;/colgroup&gt;
+    &lt;tr&gt;&lt;th&gt;Col 1&lt;/th&gt;&lt;th&gt;Col 2&lt;/th&gt;&lt;th&gt;Col 3&lt;/th&gt;&lt;/tr&gt;
+    ...
+&lt;/table&gt;</pre>
+</div>
+
+<!-- ===================== BGCOLOR ===================== -->
+<div class="example-box">
+    <h3>Cell Colors with BGCOLOR</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width:100%;">
+        <tr>
+            <th bgcolor="#1a237e" style="color:#fff;">Header 1</th>
+            <th bgcolor="#1a237e" style="color:#fff;">Header 2</th>
+            <th bgcolor="#1a237e" style="color:#fff;">Header 3</th>
+        </tr>
+        <tr bgcolor="#e8eaf6">
+            <td>Row 1, Cell 1</td>
+            <td>Row 1, Cell 2</td>
+            <td>Row 1, Cell 3</td>
+        </tr>
+        <tr bgcolor="#c8e6c9">
+            <td>Row 2, Cell 1</td>
+            <td>Row 2, Cell 2</td>
+            <td>Row 2, Cell 3</td>
+        </tr>
+        <tr bgcolor="#fff9c4">
+            <td>Row 3, Cell 1</td>
+            <td>Row 3, Cell 2</td>
+            <td>Row 3, Cell 3</td>
+        </tr>
+    </table>
+    <pre>&lt;tr bgcolor="#c8e6c9"&gt;
+    &lt;td&gt;Green row&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;td bgcolor="#fff9c4"&gt;Yellow cell&lt;/td&gt;</pre>
+    <p><em>Note: <code>bgcolor</code> is deprecated in HTML5. Use CSS <code>background-color</code> instead.</em></p>
+</div>
+
+</body>
+</html>

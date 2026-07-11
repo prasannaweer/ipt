@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13 - Form Validation</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; font-size: 14px; box-sizing: border-box; }
+        button { padding: 10px 20px; margin-top: 20px; font-size: 16px; background: #3498db; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #2980b9; }
+        .error { color: #e74c3c; font-size: 13px; margin-top: 3px; }
+        .success { color: #27ae60; margin-top: 15px; }
+        input.invalid { border: 2px solid #e74c3c; }
+        input.valid { border: 2px solid #27ae60; }
+    </style>
+</head>
+<body>
+    <h1>Form Data Validation</h1>
+
+    <form name="registrationForm" onsubmit="return validateForm()">
+        <label for="name">Full Name (3-50 chars):</label>
+        <input type="text" id="name" name="name">
+        <div class="error" id="nameError"></div>
+
+        <label for="email">Email Address:</label>
+        <input type="text" id="email" name="email">
+        <div class="error" id="emailError"></div>
+
+        <label for="phone">Phone Number (10 digits):</label>
+        <input type="text" id="phone" name="phone">
+        <div class="error" id="phoneError"></div>
+
+        <label for="password">Password (min 8 chars):</label>
+        <input type="password" id="password" name="password">
+        <div class="error" id="passwordError"></div>
+
+        <label for="age">Age (18-120):</label>
+        <input type="number" id="age" name="age">
+        <div class="error" id="ageError"></div>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="">-- Select --</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <div class="error" id="genderError"></div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="success" id="successMsg"></div>
+
+    <script>
+        function validateForm() {
+            // Get values
+            var name = document.getElementById("name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var phone = document.getElementById("phone").value.trim();
+            var password = document.getElementById("password").value;
+            var age = document.getElementById("age").value;
+            var gender = document.getElementById("gender").value;
+
+            var isValid = true;
+
+            // Clear previous errors
+            clearErrors();
+
+            // Validate name
+            if (name === "") {
+                showError("name", "Name is required.");
+                isValid = false;
+            } else if (name.length < 3 || name.length > 50) {
+                showError("name", "Name must be 3-50 characters.");
+                isValid = false;
+            } else {
+                markValid("name");
+            }
+
+            // Validate email
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === "") {
+                showError("email", "Email is required.");
+                isValid = false;
+            } else if (!emailPattern.test(email)) {
+                showError("email", "Enter a valid email address.");
+                isValid = false;
+            } else {
+                markValid("email");
+            }
+
+            // Validate phone
+            var phonePattern = /^\d{10}$/;
+            if (phone === "") {
+                showError("phone", "Phone number is required.");
+                isValid = false;
+            } else if (!phonePattern.test(phone)) {
+                showError("phone", "Phone must be exactly 10 digits.");
+                isValid = false;
+            } else {
+                markValid("phone");
+            }
+
+            // Validate password
+            if (password === "") {
+                showError("password", "Password is required.");
+                isValid = false;
+            } else if (password.length < 8) {
+                showError("password", "Password must be at least 8 characters.");
+                isValid = false;
+            } else {
+                markValid("password");
+            }
+
+            // Validate age
+            if (age === "") {
+                showError("age", "Age is required.");
+                isValid = false;
+            } else {
+                var ageNum = parseInt(age);
+                if (isNaN(ageNum) || ageNum < 18 || ageNum > 120) {
+                    showError("age", "Age must be between 18 and 120.");
+                    isValid = false;
+                } else {
+                    markValid("age");
+                }
+            }
+
+            // Validate gender
+            if (gender === "") {
+                showError("gender", "Please select a gender.");
+                isValid = false;
+            } else {
+                markValid("gender");
+            }
+
+            // Show success if all valid
+            if (isValid) {
+                document.getElementById("successMsg").textContent =
+                    "Registration successful! Welcome, " + name + ".";
+            }
+
+            return false; // Prevent actual form submission
+        }
+
+        function showError(field, message) {
+            document.getElementById(field + "Error").textContent = message;
+            document.getElementById(field).classList.add("invalid");
+            document.getElementById(field).classList.remove("valid");
+        }
+
+        function markValid(field) {
+            document.getElementById(field).classList.add("valid");
+            document.getElementById(field).classList.remove("invalid");
+        }
+
+        function clearErrors() {
+            var fields = ["name", "email", "phone", "password", "age", "gender"];
+            fields.forEach(function(field) {
+                document.getElementById(field + "Error").textContent = "";
+                document.getElementById(field).classList.remove("invalid");
+            });
+            document.getElementById("successMsg").textContent = "";
+        }
+    </script>
+</body>
+</html>

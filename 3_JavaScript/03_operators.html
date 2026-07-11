@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03 - Operators</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Operators</h1>
+
+    <h2>1. Arithmetic Operators</h2>
+    <div class="output" id="arithmetic"></div>
+
+    <h2>2. Assignment Operators</h2>
+    <div class="output" id="assignment"></div>
+
+    <h2>3. Comparison Operators</h2>
+    <div class="output" id="comparison"></div>
+
+    <h2>4. Logical Operators</h2>
+    <div class="output" id="logical"></div>
+
+    <h2>5. Increment / Decrement (Prefix vs Postfix)</h2>
+    <div class="output" id="increment"></div>
+
+    <script>
+        // --- Arithmetic Operators ---
+        var a = 10, b = 3;
+        var arith = "";
+        arith += "a = " + a + ", b = " + b + "\n";
+        arith += "a + b = " + (a + b) + "\n";
+        arith += "a - b = " + (a - b) + "\n";
+        arith += "a * b = " + (a * b) + "\n";
+        arith += "a / b = " + (a / b) + "\n";
+        arith += "a % b = " + (a % b) + "\n";
+
+        var c = 5;
+        arith += "\nc = " + c + "\n";
+        c++; arith += "c++ (postfix) => c = " + c + "\n";
+        c--; arith += "c-- (postfix) => c = " + c + "\n";
+        ++c; arith += "++c (prefix)  => c = " + c + "\n";
+        --c; arith += "--c (prefix)  => c = " + c + "\n";
+
+        document.getElementById("arithmetic").textContent = arith;
+
+        // --- Assignment Operators ---
+        var s = 20;
+        var assign = "s = " + s + "\n";
+        s += 5;  assign += "s += 5  => s = " + s + "\n";
+        s -= 3;  assign += "s -= 3  => s = " + s + "\n";
+        s *= 2;  assign += "s *= 2  => s = " + s + "\n";
+        s /= 4;  assign += "s /= 4  => s = " + s + "\n";
+        s %= 3;  assign += "s %= 3  => s = " + s + "\n";
+
+        document.getElementById("assignment").textContent = assign;
+
+        // --- Comparison Operators ---
+        var comp = "";
+        comp += "5 == 5      : " + (5 == 5) + "\n";
+        comp += '5 == "5"    : ' + (5 == "5") + "  (loose equality, type coercion)\n";
+        comp += '5 === "5"   : ' + (5 === "5") + "  (strict equality, no coercion)\n";
+        comp += "5 != 3      : " + (5 != 3) + "\n";
+        comp += '5 != "5"    : ' + (5 != "5") + "\n";
+        comp += "10 > 5      : " + (10 > 5) + "\n";
+        comp += "10 < 5      : " + (10 < 5) + "\n";
+        comp += "10 >= 10    : " + (10 >= 10) + "\n";
+
+        document.getElementById("comparison").textContent = comp;
+
+        // --- Logical Operators ---
+        var p = true, q = false;
+        var log = "p = " + p + ", q = " + q + "\n";
+        log += "p && q  (AND) : " + (p && q) + "\n";
+        log += "p || q  (OR)  : " + (p || q) + "\n";
+        log += "!p      (NOT) : " + (!p) + "\n";
+        log += "!q      (NOT) : " + (!q) + "\n";
+
+        document.getElementById("logical").textContent = log;
+
+        // --- Increment / Decrement ---
+        var m = 5, n = 5;
+        var inc = "";
+        var post = m++;
+        inc += "var m = 5; var post = m++;\n";
+        inc += "post = " + post + " (returned old value), m = " + m + "\n\n";
+
+        var pre = ++n;
+        inc += "var n = 5; var pre = ++n;\n";
+        inc += "pre = " + pre + " (returned new value), n = " + n + "\n";
+
+        document.getElementById("increment").textContent = inc;
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RDB to XML Conversion</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 900px; }
+        h1 { color: #16a085; border-bottom: 2px solid #16a085; padding-bottom: 10px; }
+        h2 { color: #0e6655; }
+        .output { background: #f0f0f0; border-left: 4px solid #16a085; padding: 15px; margin: 15px 0; }
+        table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+        th { background: #16a085; color: #fff; }
+        tr:nth-child(even) { background: #f2f2f2; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px; }
+        .note { background: #fef9e7; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>06 - Relational Database to XML Conversion</h1>
+    <p>Shows how tabular data from a relational database can be represented as XML.</p>
+
+    <div class="note">
+        <strong>Key Concept:</strong> Relational databases store data in tables (rows &amp; columns).
+        XML represents the same data hierarchically using nested elements. Each row becomes
+        an element, and each column becomes a child element or attribute.
+    </div>
+
+    <!-- ===== STEP 1: DATABASE TABLES ===== -->
+    <h2>Step 1: Relational Database Tables</h2>
+
+    <h3>Table: departments</h3>
+    <div class="output">
+        <table>
+            <tr><th>dept_id</th><th>dept_name</th><th>location</th></tr>
+            <tr><td>1</td><td>Engineering</td><td>Building A</td></tr>
+            <tr><td>2</td><td>Marketing</td><td>Building B</td></tr>
+            <tr><td>3</td><td>Human Resources</td><td>Building A</td></tr>
+        </table>
+    </div>
+
+    <h3>Table: employees</h3>
+    <div class="output">
+        <table>
+            <tr><th>emp_id</th><th>name</th><th>dept_id (FK)</th><th>salary</th><th>hire_date</th></tr>
+            <tr><td>101</td><td>Alice Johnson</td><td>1</td><td>85000</td><td>2020-03-15</td></tr>
+            <tr><td>102</td><td>Bob Smith</td><td>1</td><td>92000</td><td>2019-07-01</td></tr>
+            <tr><td>103</td><td>Carol White</td><td>2</td><td>68000</td><td>2021-01-10</td></tr>
+            <tr><td>104</td><td>Dave Brown</td><td>3</td><td>61000</td><td>2022-05-20</td></tr>
+            <tr><td>105</td><td>Eve Davis</td><td>2</td><td>73000</td><td>2020-11-30</td></tr>
+        </table>
+    </div>
+
+    <!-- ===== Step 2: SQL Query ===== -->
+    <h2>Step 2: SQL Query (JOIN)</h2>
+    <pre>
+SELECT e.emp_id, e.name, d.dept_name, d.location, e.salary, e.hire_date
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id
+ORDER BY d.dept_name, e.name;</pre>
+
+    <!-- ===== Step 3: Generated XML ===== -->
+    <h2>Step 3: Generated XML Output</h2>
+    <pre id="xmlOutput"></pre>
+
+    <!-- ===== Step 4: XML with Attributes ===== -->
+    <h2>Step 4: XML with Attributes (Alternative Format)</h2>
+    <pre id="xmlOutput2"></pre>
+
+    <!-- ===== Step 5: PHP Conversion Code ===== -->
+    <h2>Step 5: PHP Code to Convert DB to XML</h2>
+    <pre>
+&lt;?php
+$conn = new mysqli("localhost", "root", "", "company_db");
+
+// Query with JOIN
+$sql = "SELECT e.emp_id, e.name, d.dept_name, d.location,
+               e.salary, e.hire_date
+        FROM employees e
+        JOIN departments d ON e.dept_id = d.dept_id
+        ORDER BY d.dept_name";
+$result = $conn->query($sql);
+
+// Start XML output
+header('Content-Type: text/xml');
+echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;';
+echo '&lt;employees&gt;';
+
+while ($row = $result->fetch_assoc()) {
+    echo '  &lt;employee id="' . $row['emp_id'] . '"&gt;';
+    echo '    &lt;name&gt;' . $row['name'] . '&lt;/name&gt;';
+    echo '    &lt;department&gt;' . $row['dept_name'] . '&lt;/department&gt;';
+    echo '    &lt;location&gt;' . $row['location'] . '&lt;/location&gt;';
+    echo '    &lt;salary&gt;' . $row['salary'] . '&lt;/salary&gt;';
+    echo '    &lt;hire-date&gt;' . $row['hire_date'] . '&lt;/hire-date&gt;';
+    echo '  &lt;/employee&gt;';
+}
+
+echo '&lt;/employees&gt;';
+$conn->close();
+?&gt;</pre>
+
+    <div class="note">
+        <strong>Use Cases for RDB to XML Conversion:</strong>
+        <ul>
+            <li>Data exchange between different systems</li>
+            <li>Web services and SOAP messaging</li>
+            <li>Data backup and archival in a portable format</li>
+            <li>Reporting and document generation</li>
+            <li>Migrating data between incompatible databases</li>
+        </ul>
+    </div>
+
+    <script>
+    // Generate XML output 1: Element-based
+    var xml1 = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<employees>\n' +
+        '  <employee>\n' +
+        '    <emp_id>101</emp_id>\n' +
+        '    <name>Alice Johnson</name>\n' +
+        '    <department>Engineering</department>\n' +
+        '    <location>Building A</location>\n' +
+        '    <salary>85000</salary>\n' +
+        '    <hire_date>2020-03-15</hire_date>\n' +
+        '  </employee>\n' +
+        '  <employee>\n' +
+        '    <emp_id>102</emp_id>\n' +
+        '    <name>Bob Smith</name>\n' +
+        '    <department>Engineering</department>\n' +
+        '    <location>Building A</location>\n' +
+        '    <salary>92000</salary>\n' +
+        '    <hire_date>2019-07-01</hire_date>\n' +
+        '  </employee>\n' +
+        '  <employee>\n' +
+        '    <emp_id>103</emp_id>\n' +
+        '    <name>Carol White</name>\n' +
+        '    <department>Marketing</department>\n' +
+        '    <location>Building B</location>\n' +
+        '    <salary>68000</salary>\n' +
+        '    <hire_date>2021-01-10</hire_date>\n' +
+        '  </employee>\n' +
+        '  <employee>\n' +
+        '    <emp_id>104</emp_id>\n' +
+        '    <name>Dave Brown</name>\n' +
+        '    <department>Human Resources</department>\n' +
+        '    <location>Building A</location>\n' +
+        '    <salary>61000</salary>\n' +
+        '    <hire_date>2022-05-20</hire_date>\n' +
+        '  </employee>\n' +
+        '  <employee>\n' +
+        '    <emp_id>105</emp_id>\n' +
+        '    <name>Eve Davis</name>\n' +
+        '    <department>Marketing</department>\n' +
+        '    <location>Building B</location>\n' +
+        '    <salary>73000</salary>\n' +
+        '    <hire_date>2020-11-30</hire_date>\n' +
+        '  </employee>\n' +
+        '</employees>';
+
+    document.getElementById("xmlOutput").textContent = xml1;
+
+    // Generate XML output 2: Attribute-based
+    var xml2 = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<employees>\n' +
+        '  <employee id="101" name="Alice Johnson" dept="Engineering"\n' +
+        '            location="Building A" salary="85000" hire_date="2020-03-15"/>\n' +
+        '  <employee id="102" name="Bob Smith" dept="Engineering"\n' +
+        '            location="Building A" salary="92000" hire_date="2019-07-01"/>\n' +
+        '  <employee id="103" name="Carol White" dept="Marketing"\n' +
+        '            location="Building B" salary="68000" hire_date="2021-01-10"/>\n' +
+        '  <employee id="104" name="Dave Brown" dept="Human Resources"\n' +
+        '            location="Building A" salary="61000" hire_date="2022-05-20"/>\n' +
+        '  <employee id="105" name="Eve Davis" dept="Marketing"\n' +
+        '            location="Building B" salary="73000" hire_date="2020-11-30"/>\n' +
+        '</employees>';
+
+    document.getElementById("xmlOutput2").textContent = xml2;
+    </script>
+</div>
+</body>
+</html>

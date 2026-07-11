@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 - Hello World</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Hello World - JavaScript Output Methods</h1>
+
+    <h2>1. document.write()</h2>
+    <p>Writes directly into the HTML document stream:</p>
+    <div class="output" id="docWrite"></div>
+
+    <h2>2. innerHTML</h2>
+    <p>Sets the HTML content of an element:</p>
+    <div class="output" id="innerOutput"></div>
+
+    <h2>3. window.alert()</h2>
+    <p>Displays a dialog box (commented out to avoid blocking):</p>
+    <button onclick="showAlert()">Click to Alert</button>
+
+    <h2>4. console.log()</h2>
+    <p>Outputs to the browser console (open DevTools to see):</p>
+    <pre id="consoleOutput"></pre>
+
+    <script>
+        // --- document.write() ---
+        document.getElementById("docWrite").innerHTML = "Hello, World! (via document.write equivalent)";
+
+        // --- innerHTML ---
+        document.getElementById("innerOutput").innerHTML = "<strong>Hello, World!</strong> (via innerHTML)";
+
+        // --- window.alert() ---
+        function showAlert() {
+            window.alert("Hello, World! (via alert)");
+        }
+
+        // --- console.log() ---
+        console.log("Hello, World! (via console.log)");
+        document.getElementById("consoleOutput").textContent =
+            'console.log("Hello, World! (via console.log)");\n// Check browser console (F12)';
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #studentDisplayArea {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 400px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Student Record Form</h2>
+    
+    <div class="form-container">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob">
+        </div>
+        <div class="form-group">
+            <label for="regNo">Registration Number:</label>
+            <input type="text" id="regNo" placeholder="Enter registration number">
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" placeholder="Enter contact number">
+        </div>
+        
+        <button onclick="addStudentRecord()">Add Student</button>
+        <button onclick="displayStudents()">Display Students</button>
+    </div>
+
+    <h2>Saved Student Records</h2>
+    <div id="studentDisplayArea">No records displayed yet.</div>
+
+    <script>
+        // Initialize the global array to hold student records
+        let studentArray = [];
+
+        function addStudentRecord(){
+            // Fetch values from the input fields
+            let a = document.getElementById("name").value;
+            let b = document.getElementById("dob").value;
+            let c = document.getElementById("regNo").value;
+            let d = document.getElementById("contact").value;
+
+            // Simple validation to ensure inputs aren't empty
+            if (!a || !b || !c || !d) {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            // Create the student object and map the values
+            let student = {};
+            student.name = a;
+            student.dob = b;
+            student.regNo = c;
+            student.contact = d;
+
+            // Push the completed object into the array
+            studentArray.push(student);
+
+            // Clear out the input fields after adding
+            document.getElementById("name").value = "";
+            document.getElementById("dob").value = "";
+            document.getElementById("regNo").value = ""; 
+            document.getElementById("contact").value = "";
+
+            alert("Student added to array!");
+        }
+
+        function displayStudents(){
+            let text = "";
+            
+            if (studentArray.length === 0) {
+                document.getElementById("studentDisplayArea").innerHTML = "No students in the database.";
+                return;
+            }
+
+            for(let i = 0; i < studentArray.length; i++){
+                let std = studentArray[i];
+                let name = std.name;
+                let dob = std.dob;
+                let regNo = std.regNo;
+                let contact = std.contact;
+
+                // Concatenate the strings to construct HTML display format
+                text += '<strong>Name:</strong> ' + name + '<br>' +
+                        '<strong>Date of Birth:</strong> ' + dob + '<br>' +
+                        '<strong>Registration Number:</strong> ' + regNo + '<br>' +
+                        '<strong>Contact:</strong> ' + contact + '<br><br><hr><br>';
+            }
+            
+            document.getElementById("studentDisplayArea").innerHTML = text;
+        }
+    </script>
+
+</body>
+</html>

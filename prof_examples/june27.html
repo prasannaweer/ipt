@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Demonstration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .demo-section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2, h1 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
+        }
+        input, button {
+            padding: 8px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .output-box {
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>JavaScript Combined Code Demos</h1>
+    <p>This page consolidates all the code snippets shared in the lecture chat.</p>
+    <hr>
+
+    <div class="demo-section">
+        <h2>1. JavaScript try catch (Input Validation)</h2>
+        <p>Please input a number between 5 and 10:</p>
+        <input id="validationInput" type="text">
+        <button type="button" onclick="validateInputFunction()">Test Input</button>
+        <p id="validationMessage" style="font-weight: bold; color: #e74c3c;"></p>
+    </div>
+
+    <div class="demo-section">
+        <h2>2. JavaScript try catch (Division by Zero)</h2>
+        <b>Enter two numbers to divide:</b><br><br>
+        <input id="numA" type="number" value="10" style="width: 60px;"> / 
+        <input id="numB" type="number" value="0" style="width: 60px;">
+        <button type="button" onclick="runDivision()">Divide</button>
+        
+        <p id="errorDisplay" style="color:red; font-weight: bold;"></p>
+        <div id="divisionResult" class="output-box">Result will show here</div>
+    </div>
+
+    <div class="demo-section">
+        <h2>3. JavaScript Objects (Methods & Properties)</h2>
+        <div id="objectDemo" class="output-box"></div>
+    </div>
+
+    <div class="demo-section">
+        <h2>4. JSON Parsing (Converting String to Object)</h2>
+        <div id="jsonDemo" class="output-box"></div>
+    </div>
+
+    <div class="demo-section">
+        <h2>5. JavaScript Classes (Blueprints & Instances)</h2>
+        <div id="classDemo" class="output-box"></div>
+    </div>
+
+    <script>
+        // --- 1. Try Catch Input Validation Function ---
+        function validateInputFunction() {
+            document.getElementById("validationMessage").innerHTML = "";
+            let x = document.getElementById("validationInput").value;
+            try { 
+                if(x.trim() == "")  throw "empty";
+                if(isNaN(x)) throw "not a number";
+                x = Number(x);
+                if(x < 5)   throw "too low";
+                if(x > 10)   throw "too high";
+                
+                // If no error is thrown
+                document.getElementById("validationMessage").style.color = "green";
+                document.getElementById("validationMessage").innerHTML = "Input is valid!";
+            }
+            catch(err) {
+                document.getElementById("validationMessage").style.color = "#e74c3c";
+                document.getElementById("validationMessage").innerHTML = "Input is " + err;
+            }
+        }
+
+        // --- 2. Try Catch Division Function ---
+        function divideNumbers(a, b){
+            try {
+                if(b == 0){
+                    throw "Division by zero is not allowed!";
+                }
+                return a / b;
+            }
+            catch(err){
+                document.getElementById("errorDisplay").innerHTML = err;
+                return "Error encountered.";
+            }
+        }
+
+        function runDivision() {
+            document.getElementById("errorDisplay").innerHTML = "";
+            let valA = Number(document.getElementById("numA").value);
+            let valB = Number(document.getElementById("numB").value);
+            let res = divideNumbers(valA, valB);
+            document.getElementById("divisionResult").innerHTML = "Result: " + res;
+        }
+        // Run once on load to show initial demo error
+        runDivision();
+
+
+        // --- 3. JavaScript Object Demo ---
+        let student = {
+            name: "John Doe",
+            major: "Computer Science",
+            dob: "2003-01-15",
+            age: function() {
+                let today = new Date();
+                let birthDate = new Date(this.dob);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                // Adjust age if birthday hasn't occurred yet this year
+                let m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+        };
+        document.getElementById("objectDemo").innerHTML = "<strong>Name:</strong> " + student.name + "<br><strong>Major:</strong> " + student.major + "<br><strong>DOB:</strong> " + student.dob + "<br><strong>Age:</strong> " + student.age();
+
+
+        // --- 4. JSON Parsing Demo ---
+        let text = '{ "employees" : [' +
+        '{ "firstName":"John" , "lastName":"Doe" },' +
+        '{ "firstName":"Anna" , "lastName":"Smith" },' +
+        '{ "firstName":"Peter" , "lastName":"Jones" } ]}';
+
+        const obj = JSON.parse(text);
+        // Safely injected into an innerHTML container instead of destructive document.write()
+        document.getElementById("jsonDemo").innerHTML = "Parsed Employee (Index 1): " + obj.employees[1].firstName + " " + obj.employees[1].lastName;
+
+
+        // --- 5. JavaScript Class Demo ---
+        class Student {
+            constructor(name, dob, regNo, contact) {
+                this.name = name;
+                this.dob = dob;
+                this.regNo = regNo;
+                this.contact = contact;
+            }
+        }
+
+        var st1 = new Student("John Doe", "2003-01-15", "REG001", "123-456-7890");
+        var st2 = new Student("Jane Smith", "2004-02-20", "REG002", "987-654-3210");
+        var st3 = new Student("Alice Johnson", "2005-03-10", "REG003", "555-123-4567");
+
+        document.getElementById("classDemo").innerHTML = 
+            "<strong>Student 1:</strong> " + st1.name + ", " + st1.dob + ", " + st1.regNo + ", " + st1.contact + "<br>" +
+            "<strong>Student 2:</strong> " + st2.name + ", " + st2.dob + ", " + st2.regNo + ", " + st2.contact + "<br>" +
+            "<strong>Student 3:</strong> " + st3.name + ", " + st3.dob + ", " + st3.regNo + ", " + st3.contact;
+    </script>
+</body>
+</html>

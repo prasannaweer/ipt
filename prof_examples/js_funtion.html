@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Functions</title>
+</head>
+<body>
+    <input type="text" id="input1">
+    <br><br>
+    <input type="text" id="input2">
+    <br><br>
+    <button type="button" onclick="myFunction()">Test Input</button>
+
+    <script>
+
+        function myFunction(){
+
+            var a = document.getElementById("input1").value;
+            var b = document.getElementById("input2").value;
+            document.write('Sum of ' + a + ' and ' + b + ' is ' + (parseInt(a) + parseInt(b)));
+        }
+
+        function myFunction1(a,b){
+            return a+b;
+        }   
+
+        function myFunction2(a,b){
+            var squareA=myFunction(a)+myFunction(b);
+            return squareA;
+        }
+
+        
+    </script>
+
+</body>
+</html>

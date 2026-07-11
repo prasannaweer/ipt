@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 - Exception Handling</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        .error { border-left-color: #e74c3c; background: #fdecea; }
+        .success { border-left-color: #27ae60; background: #eafaf1; }
+        input { padding: 8px 12px; margin: 5px; font-size: 14px; }
+        button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Exception Handling</h1>
+
+    <h2>Input Validation with try/catch/throw/finally</h2>
+    <p>Enter a number between 1 and 100:</p>
+    <input type="text" id="validInput" placeholder="Enter 1-100">
+    <button onclick="validateInput()">Validate</button>
+    <div class="output" id="validateOutput"></div>
+
+    <h2>Code Sample</h2>
+    <pre>
+function validateNumber(input) {
+    try {
+        if (input === "") throw "Input is empty!";
+        var num = parseFloat(input);
+        if (isNaN(num)) throw "Not a valid number!";
+        if (num &lt; 1) throw "Number too low! Must be &gt;= 1";
+        if (num &gt; 100) throw "Number too high! Must be &lt;= 100";
+        return "Valid input: " + num;
+    } catch (error) {
+        return "Error: " + error;
+    } finally {
+        console.log("Validation attempt complete.");
+    }
+}
+    </pre>
+
+    <script>
+        // try/catch/throw/finally for input validation
+        function validateNumber(input) {
+            try {
+                if (input === "") {
+                    throw "Input is empty!";
+                }
+
+                var num = parseFloat(input);
+
+                if (isNaN(num)) {
+                    throw "Not a valid number!";
+                }
+
+                if (num < 1) {
+                    throw "Number too low! Must be >= 1";
+                }
+
+                if (num > 100) {
+                    throw "Number too high! Must be <= 100";
+                }
+
+                return { success: true, message: "Valid input: " + num };
+            } catch (error) {
+                return { success: false, message: "Error: " + error };
+            } finally {
+                console.log("Validation attempt complete.");
+            }
+        }
+
+        function validateInput() {
+            var input = document.getElementById("validInput").value;
+            var result = validateNumber(input);
+            var outputDiv = document.getElementById("validateOutput");
+
+            outputDiv.textContent = result.message;
+            outputDiv.className = result.success ? "output success" : "output error";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07 - Lists (Ordered &amp; Unordered)</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; margin: 12px 0; }
+        .example-box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example-box h3 { color: #0d47a1; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>07 &mdash; Lists: Ordered &amp; Unordered</h1>
+
+<!-- ===================== ORDERED LISTS ===================== -->
+<div class="example-box">
+    <h3>Ordered Lists &mdash; &lt;ol&gt;</h3>
+    <p>Items are numbered automatically. Use the <code>TYPE</code> attribute to change the numbering style.</p>
+
+    <h4 style="color:#0d47a1;">TYPE="1" &mdash; Numeric (default)</h4>
+    <ol type="1">
+        <li>First item</li>
+        <li>Second item</li>
+        <li>Third item</li>
+    </ol>
+    <pre>&lt;ol type="1"&gt;
+    &lt;li&gt;First item&lt;/li&gt;
+    &lt;li&gt;Second item&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="A" &mdash; Uppercase Letters</h4>
+    <ol type="A">
+        <li>Alpha</li>
+        <li>Beta</li>
+        <li>Gamma</li>
+    </ol>
+    <pre>&lt;ol type="A"&gt;
+    &lt;li&gt;Alpha&lt;/li&gt;
+    &lt;li&gt;Beta&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="a" &mdash; Lowercase Letters</h4>
+    <ol type="a">
+        <li>apple</li>
+        <li>banana</li>
+        <li>cherry</li>
+    </ol>
+    <pre>&lt;ol type="a"&gt;
+    &lt;li&gt;apple&lt;/li&gt;
+    &lt;li&gt;banana&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="I" &mdash; Uppercase Roman Numerals</h4>
+    <ol type="I">
+        <li>Introduction</li>
+        <li>Methods</li>
+        <li>Results</li>
+    </ol>
+    <pre>&lt;ol type="I"&gt;
+    &lt;li&gt;Introduction&lt;/li&gt;
+    &lt;li&gt;Methods&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="i" &mdash; Lowercase Roman Numerals</h4>
+    <ol type="i">
+        <li>prologue</li>
+        <li>chapter one</li>
+        <li>chapter two</li>
+    </ol>
+    <pre>&lt;ol type="i"&gt;
+    &lt;li&gt;prologue&lt;/li&gt;
+    &lt;li&gt;chapter one&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h4 style="color:#0d47a1;">Start Attribute</h4>
+    <ol type="A" start="5">
+        <li>Fifth letter</li>
+        <li>Sixth letter</li>
+    </ol>
+    <pre>&lt;ol type="A" start="5"&gt;
+    &lt;li&gt;Fifth letter&lt;/li&gt;
+&lt;/ol&gt;</pre>
+</div>
+
+<!-- ===================== UNORDERED LISTS ===================== -->
+<div class="example-box">
+    <h3>Unordered Lists &mdash; &lt;ul&gt;</h3>
+    <p>Items are bulleted. Use the <code>TYPE</code> attribute (or CSS <code>list-style-type</code>) to change the bullet style.</p>
+
+    <h4 style="color:#0d47a1;">TYPE="disc" &mdash; Filled circle (default)</h4>
+    <ul type="disc">
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ul>
+    <pre>&lt;ul type="disc"&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;
+&lt;/ul&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="circle" &mdash; Open circle</h4>
+    <ul type="circle">
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ul>
+    <pre>&lt;ul type="circle"&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;
+&lt;/ul&gt;</pre>
+
+    <h4 style="color:#0d47a1;">TYPE="square" &mdash; Filled square</h4>
+    <ul type="square">
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+    </ul>
+    <pre>&lt;ul type="square"&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;
+&lt;/ul&gt;</pre>
+</div>
+
+<!-- ===================== NESTED LISTS ===================== -->
+<div class="example-box">
+    <h3>Nested Lists</h3>
+    <ul>
+        <li>Frontend
+            <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+            </ul>
+        </li>
+        <li>Backend
+            <ol type="a">
+                <li>Node.js</li>
+                <li>Python</li>
+                <li>Java</li>
+            </ol>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

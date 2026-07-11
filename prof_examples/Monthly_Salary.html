@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Salary Calculator</title>
+</head>
+<body>
+
+    <h1>Monthly Salary Calculator</h1>
+
+    <p id="result1"></p>
+    <p id="result2"></p>
+    <p id="result3"></p>
+    <p id="result4"></p>
+
+    <script>
+
+        // Declare variables
+        var basicSalary = 45000;
+        var allowance = 0;
+        var deductions = 5000;
+        var totalSalary = 0;
+
+        // Calculate allowance
+        if (basicSalary < 30000) {
+
+            allowance = basicSalary * 0.10;
+
+        }
+        else if (basicSalary >= 30000 && basicSalary <= 50000) {
+
+            allowance = basicSalary * 0.15;
+
+        }
+        else {
+
+            allowance = basicSalary * 0.20;
+
+        }
+
+        // Calculate total salary
+        totalSalary = basicSalary + allowance - deductions;
+
+        // Display output
+        document.getElementById("result1").innerHTML =
+            "Basic Salary: " + basicSalary;
+
+        document.getElementById("result2").innerHTML =
+            "Allowance: " + allowance;
+
+        document.getElementById("result3").innerHTML =
+            "Deductions: " + deductions;
+
+        document.getElementById("result4").innerHTML =
+            "Monthly Salary: " + totalSalary;
+
+    </script>
+
+</body>
+</html>

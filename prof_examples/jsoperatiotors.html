@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic HTML</title>
+</head>
+<body>
+
+<script>
+var courses = [{course_id: 1, course_name: "JavaScript", Semester: "2024 Semester 1"},
+             {course_id: 2, course_name: "HTML", Semester: "2024 Semester 1"},
+             {course_id: 3, course_name: "CSS", Semester: "2024 Semester 1"},
+             {course_id: 4, course_name: "Python", Semester: "2024 Semester 2"},
+             {course_id: 5, course_name: "Java", Semester: "2024 Semester 2"}];
+
+             var txt = "<ul>";
+for (var i = 0; i < courses.length; i++) {
+    txt += "<li>" + courses[i].course_name + " - " + courses[i].Semester + "</li>";
+  
+}
+txt += "</ul>";
+document.write(txt);
+</script>
+</body>
+</html>

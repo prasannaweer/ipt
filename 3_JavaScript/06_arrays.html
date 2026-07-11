@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06 - Arrays</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Arrays</h1>
+
+    <h2>1. Creating Arrays</h2>
+    <div class="output" id="createOutput"></div>
+
+    <h2>2. Accessing Elements &amp; Length</h2>
+    <div class="output" id="accessOutput"></div>
+
+    <h2>3. forEach Loop - Fruits Array</h2>
+    <button onclick="forEachFruits()">Run</button>
+    <div class="output" id="forEachOutput"></div>
+
+    <h2>4. Array Methods</h2>
+    <button onclick="runMethods()">Run All Methods</button>
+    <div class="output" id="methodsOutput"></div>
+
+    <script>
+        // --- Creating Arrays ---
+        var arr1 = new Array(1, 2, 3, 4, 5);
+        var arr2 = ["apple", "banana", "cherry", "date"];
+
+        var create = "";
+        create += "Array constructor: new Array(1,2,3,4,5) => [" + arr1 + "]\n";
+        create += 'Array literal: ["apple","banana","cherry","date"] => [' + arr2 + "]\n";
+        create += "typeof arr2: " + typeof arr2 + " (always 'object')\n";
+        create += "Array.isArray(arr2): " + Array.isArray(arr2) + "\n";
+
+        document.getElementById("createOutput").textContent = create;
+
+        // --- Accessing Elements & Length ---
+        var access = "";
+        access += 'arr2[0] = "' + arr2[0] + '"\n';
+        access += 'arr2[3] = "' + arr2[3] + '"\n';
+        access += "arr2.length = " + arr2.length + "\n";
+
+        // Array as object
+        access += "\n--- Array as Object ---\n";
+        access += 'arr2["0"] = "' + arr2["0"] + '"\n';
+        access += "for (var key in arr2) => ";
+        for (var key in arr2) {
+            access += key + ":" + arr2[key] + " ";
+        }
+        access += "\n";
+
+        document.getElementById("accessOutput").textContent = access;
+
+        // --- forEach ---
+        function forEachFruits() {
+            var fruits = ["apple", "banana", "cherry", "date", "elderberry"];
+            var result = "Fruits array: [" + fruits + "]\n\n";
+            fruits.forEach(function(fruit, index) {
+                result += "fruits[" + index + '] = "' + fruit + '"\n';
+            });
+            document.getElementById("forEachOutput").textContent = result;
+        }
+
+        // --- Array Methods ---
+        function runMethods() {
+            var fruits = ["apple", "banana", "cherry"];
+            var result = "Original: [" + fruits + "]\n\n";
+
+            // push - add to end
+            fruits.push("date");
+            result += 'push("date")      => [' + fruits + "]\n";
+
+            // pop - remove from end
+            var popped = fruits.pop();
+            result += "pop()             => removed \"" + popped + "\", now [" + fruits + "]\n";
+
+            // unshift - add to beginning
+            fruits.unshift("avocado");
+            result += 'unshift("avocado") => [' + fruits + "]\n";
+
+            // shift - remove from beginning
+            var shifted = fruits.shift();
+            result += "shift()           => removed \"" + shifted + "\", now [" + fruits + "]\n";
+
+            // join
+            result += 'join(" - ")        => "' + fruits.join(" - ") + '"\n';
+
+            // splice
+            var removed = fruits.splice(1, 1, "blueberry", "coconut");
+            result += "splice(1,1,\"blueberry\",\"coconut\") => [" + fruits + "], removed [" + removed + "]\n";
+
+            // slice
+            var sliced = fruits.slice(0, 2);
+            result += "slice(0, 2)       => [" + sliced + "]\n";
+
+            // concat
+            var more = ["dragonfruit", "fig"];
+            var combined = fruits.concat(more);
+            result += "concat([" + more + "]) => [" + combined + "]\n";
+
+            // flat
+            var nested = [[1, 2], [3, 4], [5]];
+            var flat = nested.flat();
+            result += "\nflat(): [[1,2],[3,4],[5]] => [" + flat + "]\n";
+
+            document.getElementById("methodsOutput").textContent = result;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Samples Demonstration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .section {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>JavaScript Class Code Samples</h1>
+
+    <div class="section">
+        <h2>1. Array Iteration (For, While, For-In)</h2>
+        <script>
+            var a = new Array(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            var b = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            var c = new Array(10);
+            
+            document.write("<strong>First loop (for):</strong><br>");
+            for (var i = 0; i < a.length; i++) {
+                document.write(a[i] + "<br>");
+            }
+
+            document.write("<br><strong>Second loop (while):</strong><br>");
+            var index = 0
+            while (index < a.length) {
+                document.write('second time: ' + a[index] + "<br>");
+                index++;
+            }
+
+            document.write("<br><strong>Third loop (for...in):</strong><br>");
+            for (var i in a) {
+                document.write('third time: ' + a[i] + "<br>");
+            }
+
+            document.write("<br><strong>Fourth loop (populating and reading c):</strong><br>");
+            for (var i = 0; i < c.length; i++) {
+                c[i] = i + 1;
+            }
+            for (var i = 0; i < c.length; i++) {
+                document.write('fourth time: ' + c[i] + "<br>");
+            }
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>2. Objects Stored in Arrays</h2>
+        <script>
+            var person = {
+                'name': 'John',
+                'age': 30,
+                'city': 'New York'
+            };
+            var person1 = {
+                'name': 'Jane',
+                'age': 25,
+                'city': 'Los Angeles'
+            };
+            var class_math = new Array(10);
+            class_math[0] = person;
+            class_math[1] = person1;
+            class_math[2] = 10;
+
+            document.write("Name: " + class_math[0].name + "<br>");
+            document.write("Age: " + class_math[0].age + "<br>");
+            document.write("City: " + class_math[0].city + "<br>");
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>3. Nested Objects, Average Calculations & Grading</h2>
+        <script>
+            var student = {
+                'Name': 'John',
+                'Gender': 'M',
+                'DoB': '01/01/2000',
+                'Address': '123 Main St',
+                'Phone Number': '123-456-7890',
+                'Email': 'john@example.com',
+                'Marks': { 'Maths': 80, 'Science': 85, 'English': 90 }
+            };
+            
+            document.write("<strong>Student Details:</strong><br>");
+            document.write(student.Name + "<br>");
+            document.write(student.Gender + "<br>");
+            document.write(student.DoB + "<br>");
+            document.write(student.Address + "<br>");
+            document.write(student['Phone Number'] + "<br>");
+            document.write(student.Email + "<br><br>");
+            
+            document.write("<strong>Subject Marks:</strong><br>");
+            document.write("Maths: " + student.Marks.Maths + "<br>");
+            document.write("Science: " + student.Marks.Science + "<br>");
+            document.write("English: " + student.Marks.English + "<br><br>");
+
+            // Calculation & Grading Logic
+            var total = student.Marks.Maths + student.Marks.Science + student.Marks.English;
+            var average = total / 3;
+            document.write('<strong>Name:</strong> ' + student.Name + "<br>");
+            document.write('<strong>Average Marks:</strong> ' + average.toFixed(2) + "<br>");
+
+            var grade = ["A", "B", "C", "S", "F"];
+            document.write("<strong>Grade: </strong>");
+            if (average >= 75)
+                document.write(grade[0]);
+            else if (average >= 65)
+                document.write(grade[1]);
+            else if (average >= 50)
+                document.write(grade[2]);
+            else if (average >= 35)
+                document.write(grade[3]);
+            else
+                document.write(grade[4]);
+            
+            document.write("<br>");
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>4. Nested Objects: Employee Salary</h2>
+        <script>
+            var employee = {
+                'name': 'Alice',
+                'age': 28,
+                'department': 'HR',
+                'salary': {
+                    'basic': 50000,
+                    'bonus': 10000
+                }
+            };
+            document.write('Employee Name: ' + employee.name + "<br>");
+            document.write('Employee Age: ' + employee.age + "<br>");
+            document.write('Employee Department: ' + employee.department + "<br>");
+            document.write('Employee Basic Salary: ' + employee.salary.basic + "<br>");
+            document.write('Employee Bonus: ' + employee.salary.bonus + "<br>");
+            
+            var total_salary = employee.salary.basic + employee.salary.bonus;
+            document.write('<strong>Employee Total Salary: ' + total_salary + "</strong><br>");
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>5. Building HTML Elements using JavaScript (Lists)</h2>
+        <p id="demo-fruits"></p>
+        <script>
+            const fruits = ["Banana", "Orange", "Apple", "Mango"];
+            let fLen = fruits.length;
+
+            let text_fruits = "<ul>";
+            for (let i = 0; i < fLen; i++) {
+                text_fruits += "<li>" + fruits[i] + "</li>";
+            }
+            text_fruits += "</ul>";
+
+            document.getElementById("demo-fruits").innerHTML = text_fruits;
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>6. Average of Even Indices in an Array</h2>
+        <script>
+            var number_array = new Array(100);
+            for (var i = 0; i < number_array.length; i++) {
+                number_array[i] = i + 1;
+            }
+            var total_even = 0;
+            for (var i in number_array) {
+                if (i % 2 == 0) {
+                    total_even += number_array[i];
+                }
+            }
+            var average_even = total_even / number_array.length;
+            document.write("<h3>Average of Even Numbers (Indices): " + average_even + "</h3>");
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>7. Building HTML Elements using JavaScript (Tables)</h2>
+        <div id="demo-table"></div>
+        <script>
+            var courses = [
+                { 'Course_ID': 'CS101', 'Course_Name': 'Introduction to Computer Science', 'Semester': 'Fall 2024' },
+                { 'Course_ID': 'CS102', 'Course_Name': 'Data Structures', 'Semester': 'Spring 2024' },
+                { 'Course_ID': 'CS103', 'Course_Name': 'Algorithms', 'Semester': 'Fall 2024' },
+                { 'Course_ID': 'CS104', 'Course_Name': 'Operating Systems', 'Semester': 'Spring 2024' },
+                { 'Course_ID': 'CS105', 'Course_Name': 'Database Systems', 'Semester': 'Fall 2024' }
+            ];
+
+            var text_table = "<table><tr><th>Course ID</th><th>Course Name</th><th>Semester</th></tr>";
+            for (var i = 0; i < courses.length; i++) {
+                text_table += "<tr><td>" + courses[i].Course_ID + "</td><td>" + courses[i].Course_Name + "</td><td>" + courses[i].Semester + "</td></tr>";
+            }
+            text_table += "</table>";
+
+            document.getElementById("demo-table").innerHTML = text_table;
+        </script>
+    </div>
+
+</body>
+</html>

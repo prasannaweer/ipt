@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09 - DOM Objects, Classes &amp; Inheritance</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>DOM Objects, Classes &amp; Inheritance</h1>
+
+    <h2>1. JavaScript Objects</h2>
+    <button onclick="showObjects()">Run</button>
+    <div class="output" id="objOutput"></div>
+
+    <h2>2. JSON Parsing</h2>
+    <button onclick="showJSON()">Run</button>
+    <div class="output" id="jsonOutput"></div>
+
+    <h2>3. Classes, Methods &amp; Inheritance</h2>
+    <button onclick="showClasses()">Run</button>
+    <div class="output" id="classOutput"></div>
+
+    <script>
+        // --- JS Objects ---
+        function showObjects() {
+            var person = {
+                firstName: "John",
+                lastName: "Doe",
+                age: 30,
+                fullName: function() {
+                    return this.firstName + " " + this.lastName;
+                }
+            };
+
+            var result = "";
+            result += "person.firstName  = " + person.firstName + "\n";
+            result += 'person["lastName"] = ' + person["lastName"] + "\n";
+            result += "person.fullName() = " + person.fullName() + "\n\n";
+
+            result += "Object keys: " + Object.keys(person).join(", ") + "\n";
+
+            document.getElementById("objOutput").textContent = result;
+        }
+
+        // --- JSON ---
+        function showJSON() {
+            var person = { name: "Alice", age: 25, hobbies: ["reading", "coding"] };
+
+            var jsonString = JSON.stringify(person);
+            var parsed = JSON.parse(jsonString);
+
+            var result = "Original object: " + typeof person + "\n";
+            result += "JSON.stringify:   " + jsonString + "\n";
+            result += "JSON.parse type: " + typeof parsed + "\n";
+            result += "parsed.name:     " + parsed.name + "\n";
+
+            document.getElementById("jsonOutput").textContent = result;
+        }
+
+        // --- Classes & Inheritance ---
+        class Animal {
+            constructor(name, sound) {
+                this.name = name;
+                this.sound = sound;
+            }
+
+            speak() {
+                return this.name + " says " + this.sound + "!";
+            }
+
+            static kingdom() {
+                return "Animalia";
+            }
+        }
+
+        class Dog extends Animal {
+            constructor(name, breed) {
+                super(name, "Woof");
+                this.breed = breed;
+            }
+
+            fetch(item) {
+                return this.name + " fetches the " + item + "!";
+            }
+        }
+
+        function showClasses() {
+            var result = "";
+
+            var cat = new Animal("Cat", "Meow");
+            result += "--- Animal Class ---\n";
+            result += "cat.speak()    = " + cat.speak() + "\n";
+            result += "Animal.kingdom() = " + Animal.kingdom() + "\n\n";
+
+            var dog = new Dog("Rex", "German Shepherd");
+            result += "--- Dog extends Animal ---\n";
+            result += "dog.speak()    = " + dog.speak() + " (inherited)\n";
+            result += "dog.fetch()    = " + dog.fetch("ball") + "\n";
+            result += "dog.breed      = " + dog.breed + "\n";
+            result += "Dog.kingdom()  = " + Dog.kingdom() + " (inherited static)\n";
+
+            document.getElementById("classOutput").textContent = result;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Try Catch Example</title>
+</head>
+<body>
+  <button id="tryCatchButton">Click to run try/catch</button>
+  <p id="output"></p>
+
+  <script>
+    document.getElementById('tryCatchButton').addEventListener('click', function() {
+      try {
+        // Intentionally cause an error by using an undefined variable
+        let result = undefinedVariable + 1;
+        document.getElementById('output').textContent = 'Result: ' + result;
+      } catch (error) {
+        document.getElementById('output').textContent = 'Caught an error: ' + error.message;
+      } finally {
+        console.log('Button click handled.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05 - Headings, Alignment &amp; Comments</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; margin: 12px 0; }
+        .example-box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example-box h3 { color: #0d47a1; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>05 &mdash; Headings, Text Alignment &amp; Comments</h1>
+
+<!-- This is an HTML comment. It does NOT appear in the rendered page. -->
+
+<div class="example-box">
+    <h3>Heading Levels H1 through H6</h3>
+    <p>HTML provides six levels of headings. Note: There is no H7 in the HTML standard.</p>
+
+    <h1>H1 &mdash; Main Heading (largest)</h1>
+    <h2>H2 &mdash; Section Heading</h2>
+    <h3>H3 &mdash; Sub-section Heading</h3>
+    <h4>H4 &mdash; Minor Heading</h4>
+    <h5>H5 &mdash; Small Heading</h5>
+    <h6>H6 &mdash; Smallest Heading</h6>
+
+    <pre>&lt;h1&gt;H1 - Main Heading&lt;/h1&gt;
+&lt;h2&gt;H2 - Section Heading&lt;/h2&gt;
+&lt;h3&gt;H3 - Sub-section Heading&lt;/h3&gt;
+&lt;h4&gt;H4 - Minor Heading&lt;/h4&gt;
+&lt;h5&gt;H5 - Small Heading&lt;/h5&gt;
+&lt;h6&gt;H6 - Smallest Heading&lt;/h6&gt;</pre>
+</div>
+
+<div class="example-box">
+    <h3>Text Alignment with ALIGN Attribute</h3>
+
+    <h2 align="left">Left-Aligned Heading (default)</h2>
+    <h2 align="center">Center-Aligned Heading</h2>
+    <h2 align="right">Right-Aligned Heading</h2>
+    <h2 align="justify">Justified Heading Text Example</h2>
+
+    <pre>&lt;h2 align="left"&gt;Left-aligned&lt;/h2&gt;
+&lt;h2 align="center"&gt;Center-aligned&lt;/h2&gt;
+&lt;h2 align="right"&gt;Right-aligned&lt;/h2&gt;
+&lt;h2 align="justify"&gt;Justified&lt;/h2&gt;</pre>
+    <p><em>Note: The <code>align</code> attribute is deprecated in HTML5. Use CSS <code>text-align</code> instead.</em></p>
+</div>
+
+<div class="example-box">
+    <h3>HTML Comments</h3>
+    <p>Comments are invisible to the browser. They are useful for code notes and documentation.</p>
+    <pre>&lt;!-- This is an HTML comment --&gt;
+
+&lt;!--
+    Multi-line
+    comments work
+    too.
+--&gt;</pre>
+    <!-- This is a multi-line comment in the actual file.
+         It helps explain sections of the code.
+    -->
+</div>
+
+</body>
+</html>

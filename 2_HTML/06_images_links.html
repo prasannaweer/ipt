@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06 - Images &amp; Links</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; margin: 12px 0; }
+        .example-box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example-box h3 { color: #0d47a1; margin-bottom: 10px; }
+        a { color: #1565c0; }
+        .placeholder-img {
+            display: inline-block; width: 200px; height: 130px;
+            background: linear-gradient(135deg, #bbdefb, #e3f2fd);
+            border: 2px dashed #90caf9; border-radius: 6px;
+            text-align: center; line-height: 130px; color: #1565c0; font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>06 &mdash; Images &amp; Links</h1>
+
+<!-- ===================== IMAGES ===================== -->
+<div class="example-box">
+    <h3>Images &mdash; &lt;img&gt; Tag</h3>
+    <p>The <code>&lt;img&gt;</code> tag embeds an image. Key attributes:</p>
+
+    <p><strong>With placeholder (since no real image file is available):</strong></p>
+    <div class="placeholder-img">placeholder image (200 &times; 130)</div>
+
+    <pre>&lt;img src="photo.jpg" alt="Description" width="200" height="130"&gt;</pre>
+
+    <h4 style="color:#0d47a1; margin-top:14px;">All IMG Attributes</h4>
+    <pre>&lt;img
+    src="image.jpg"       &lt;!-- Path or URL to the image --&gt;
+    alt="Alternate Text"  &lt;!-- Text shown if image cannot load --&gt;
+    width="300"           &lt;!-- Width in pixels --&gt;
+    height="200"          &lt;!-- Height in pixels --&gt;
+    border="2"            &lt;!-- Border thickness (deprecated; use CSS) --&gt;
+&gt;</pre>
+
+    <p><strong>Image as a link:</strong></p>
+    <pre>&lt;a href="https://example.com"&gt;
+    &lt;img src="logo.png" alt="Logo" width="100" height="50" border="0"&gt;
+&lt;/a&gt;</pre>
+</div>
+
+<!-- ===================== LINKS ===================== -->
+<div class="example-box">
+    <h3>Hyperlinks &mdash; &lt;a&gt; Tag</h3>
+
+    <h4>Basic Link</h4>
+    <p><a href="https://www.google.com" target="_blank">Open Google in a new tab</a></p>
+    <pre>&lt;a href="https://www.google.com" target="_blank"&gt;Open Google&lt;/a&gt;</pre>
+
+    <h4>Link to Another Page</h4>
+    <p><a href="01_structure.html">Go to the HTML Structure page</a></p>
+    <pre>&lt;a href="01_structure.html"&gt;Go to Structure page&lt;/a&gt;</pre>
+
+    <h4>Email Link</h4>
+    <p><a href="mailto:student@mit.edu?subject=Hello&body=This is the email body.">Send Email to student@mit.edu</a></p>
+    <pre>&lt;a href="mailto:student@mit.edu?subject=Hello&amp;body=Message"&gt;
+    Send Email
+&lt;/a&gt;</pre>
+
+    <h4>Anchor (Jump to Section)</h4>
+    <p><a href="#bottom">Jump to Bottom of Page</a></p>
+    <pre>&lt;a href="#bottom"&gt;Jump to Bottom&lt;/a&gt;
+
+&lt;div id="bottom"&gt;This is the bottom.&lt;/div&gt;</pre>
+
+    <h4>Link Attributes</h4>
+    <pre>&lt;a
+    href="url"           &lt;!-- Destination URL --&gt;
+    target="_blank"      &lt;!-- Open in new tab/window --&gt;
+    title="Tooltip"      &lt;!-- Tooltip on hover --&gt;
+    rel="noopener"       &lt;!-- Security for target="_blank" --&gt;
+&gt;Link Text&lt;/a&gt;</pre>
+</div>
+
+<!-- Anchor target -->
+<div id="bottom" style="background:#e8eaf6; padding:14px; border-radius:6px; margin-top:20px;">
+    <strong>&#8593; This is the anchor target (&#35;bottom).</strong> Use the link above to jump here.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrative Programming - Introduction</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #333; background: #f4f6f9; }
+        header { background: linear-gradient(135deg, #1a237e, #0d47a1); color: #fff; padding: 50px 0; text-align: center; }
+        header h1 { font-size: 2.6em; margin-bottom: 10px; }
+        header p { font-size: 1.15em; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+        .container { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
+        section { background: #fff; border-radius: 10px; padding: 30px 35px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+        section h2 { color: #1a237e; font-size: 1.6em; margin-bottom: 14px; border-bottom: 2px solid #e3e7ef; padding-bottom: 8px; }
+        section h3 { color: #0d47a1; margin: 18px 0 8px; }
+        section p, section li { font-size: 1.02em; }
+        ul, ol { margin-left: 22px; margin-top: 8px; }
+        li { margin-bottom: 6px; }
+        .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 12px; }
+        .model-card { background: #e8eaf6; border-left: 4px solid #1a237e; padding: 16px 20px; border-radius: 6px; }
+        .model-card h4 { color: #1a237e; margin-bottom: 6px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: left; }
+        th { background: #1a237e; color: #fff; }
+        tr:nth-child(even) { background: #f0f2f8; }
+        footer { text-align: center; padding: 24px; color: #777; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Integrative Programming &amp; Technologies</h1>
+    <p>Understanding the principles, models, and middleware behind modern software integration</p>
+</header>
+
+<div class="container">
+
+    <!-- Definition -->
+    <section id="definition">
+        <h2>1. What Is Software Integration?</h2>
+        <p><strong>Software integration</strong> is the practice of combining separate software systems, applications, or components so they can share data and work together as a unified whole. Rather than building one monolithic application, organisations combine best-of-breed systems and connect them through defined interfaces and middleware.</p>
+        <p>Integrative programming focuses on the design, implementation, and maintenance of these connections so that data flows reliably, securely, and in real time across heterogeneous platforms.</p>
+    </section>
+
+    <!-- Integration Models -->
+    <section id="models">
+        <h2>2. Integration Models</h2>
+        <div class="model-grid">
+            <div class="model-card">
+                <h4>Presentation Integration</h4>
+                <p>Integrates the <em>user interface</em> of multiple systems. Users interact with a single front-end while the back-end systems remain separate. Examples include portal systems and web-based dashboards that aggregate UI components from different services.</p>
+            </div>
+            <div class="model-card">
+                <h4>Data Integration</h4>
+                <p>Focuses on combining <em>data</em> from different sources into a single, consistent view. Techniques include data warehousing, ETL (Extract-Transform-Load), and database replication. The goal is a single source of truth across systems.</p>
+            </div>
+            <div class="model-card">
+                <h4>Functional Integration</h4>
+                <p>Combines the <em>business logic and functionality</em> of multiple systems. One application invokes functions or services exposed by another. This is the most common form of enterprise integration and underpins SOA and microservices architectures.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges -->
+    <section id="challenges">
+        <h2>3. Challenges of Integration</h2>
+        <ul>
+            <li><strong>Heterogeneity</strong> &mdash; Systems run on different platforms, use different programming languages, and follow different data formats.</li>
+            <li><strong>Security</strong> &mdash; Data crossing network boundaries must be encrypted, authenticated, and authorised.</li>
+            <li><strong>Scalability</strong> &mdash; Integration solutions must handle growing numbers of users, transactions, and data volumes.</li>
+            <li><strong>Reliability &amp; Fault Tolerance</strong> &mdash; Failures in one system should not cascade and bring down the entire integrated ecosystem.</li>
+            <li><strong>Versioning &amp; Evolution</strong> &mdash; As systems evolve independently, maintaining backward-compatible interfaces is difficult.</li>
+            <li><strong>Latency</strong> &mdash; Network communication between services introduces delays that must be managed.</li>
+            <li><strong>Complexity</strong> &mdash; The number of point-to-point connections grows exponentially with each new system (n&times;(n&minus;1)/2).</li>
+        </ul>
+    </section>
+
+    <!-- Middleware -->
+    <section id="middleware">
+        <h2>4. Middleware Types</h2>
+        <p>Middleware is the software layer that sits between applications and provides common services for communication, data transformation, and coordination.</p>
+
+        <h3>Transaction Processing Middleware</h3>
+        <p>Manages distributed transactions across multiple systems, ensuring ACID properties (Atomicity, Consistency, Isolation, Durability). Examples: Tuxedo, IBM CICS.</p>
+
+        <h3>Message-Oriented Middleware (MOM)</h3>
+        <p>Enables asynchronous communication between applications via messages and queues. Producers send messages without knowing who will consume them. Examples: IBM MQ, RabbitMQ, Apache Kafka.</p>
+
+        <h3>Object-Oriented Middleware</h3>
+        <p>Allows objects on different machines to invoke methods on each other as if they were local. Provides object registration, location, and activation services. Examples: CORBA ORBs, .NET Remoting.</p>
+
+        <h3>Database Middleware</h3>
+        <p>Provides a standard interface between applications and databases (ODBC, JDBC). Handles connection pooling, query routing, and transaction management.</p>
+
+        <table>
+            <tr><th>Type</th><th>Communication</th><th>Use Case</th></tr>
+            <tr><td>Transaction</td><td>Synchronous, ACID</td><td>Banking, order processing</td></tr>
+            <tr><td>Message-Oriented</td><td>Asynchronous, queue-based</td><td>Event-driven systems, decoupled services</td></tr>
+            <tr><td>Object-Oriented</td><td>Remote method invocation</td><td>Distributed object systems</td></tr>
+            <tr><td>Database</td><td>SQL/Query</td><td>Cross-database access</td></tr>
+        </table>
+    </section>
+
+    <!-- CORBA -->
+    <section id="corba">
+        <h2>5. CORBA (Common Object Request Broker Architecture)</h2>
+        <p>CORBA is a standard defined by the Object Management Group (OMG) that enables software components written in different languages and running on different platforms to communicate through an <strong>Object Request Broker (ORB)</strong>.</p>
+        <h3>Key Components</h3>
+        <ul>
+            <li><strong>ORB</strong> &mdash; Intercepts requests and finds the correct object implementation, transparently handling network communication.</li>
+            <li><strong>IDL (Interface Definition Language)</strong> &mdash; A language-neutral way to define the interfaces that objects expose.</li>
+            <li><strong>IIOP (Internet Inter-ORB Protocol)</strong> &mdash; The wire protocol that ORBs use to communicate over TCP/IP.</li>
+            <li><strong>POA (Portable Object Adapter)</strong> &mdash; Maps object references to their implementations.</li>
+        </ul>
+        <p>While CORBA was widely adopted in the 1990s and 2000s, its complexity led to decline in favour of lighter-weight alternatives like REST and gRPC.</p>
+    </section>
+
+    <!-- DCOM -->
+    <section id="dcom">
+        <h2>6. DCOM (Distributed Component Object Model)</h2>
+        <p>DCOM is a Microsoft proprietary technology that extends COM (Component Object Model) to support communication between components on different machines across a network.</p>
+        <h3>Characteristics</h3>
+        <ul>
+            <li>Uses <strong>RPC (Remote Procedure Call)</strong> under the hood for network communication.</li>
+            <li>Provides location transparency &mdash; a client can invoke methods on a remote object as if it were local.</li>
+            <li>Built-in support for <strong>authentication</strong> and <strong>authorization</strong> via Windows security.</li>
+            <li>Primarily used in Windows-only environments.</li>
+        </ul>
+        <p>DCOM has largely been superseded by .NET Remoting and later by WCF (Windows Communication Foundation) and RESTful web services.</p>
+    </section>
+
+    <!-- REST -->
+    <section id="rest">
+        <h2>7. REST Architecture (Representational State Transfer)</h2>
+        <p>REST is an architectural style proposed by Roy Fielding in 2000 for designing networked applications. It has become the dominant approach for building web APIs.</p>
+        <h3>Core Principles</h3>
+        <ul>
+            <li><strong>Client-Server</strong> &mdash; Separation of concerns between the UI and data storage.</li>
+            <li><strong>Stateless</strong> &mdash; Each request contains all the information needed to process it; the server stores no client context.</li>
+            <li><strong>Cacheable</strong> &mdash; Responses must indicate whether they can be cached to improve performance.</li>
+            <li><strong>Uniform Interface</strong> &mdash; Standard HTTP methods (GET, POST, PUT, DELETE) operate on resources identified by URIs.</li>
+            <li><strong>Layered System</strong> &mdash; Clients cannot tell whether they are connected directly to the server or through intermediaries (load balancers, proxies).</li>
+        </ul>
+        <h3>RESTful API Example</h3>
+        <table>
+            <tr><th>Method</th><th>URI</th><th>Purpose</th></tr>
+            <tr><td>GET</td><td>/api/students</td><td>List all students</td></tr>
+            <tr><td>GET</td><td>/api/students/42</td><td>Get student with ID 42</td></tr>
+            <tr><td>POST</td><td>/api/students</td><td>Create a new student</td></tr>
+            <tr><td>PUT</td><td>/api/students/42</td><td>Update student 42</td></tr>
+            <tr><td>DELETE</td><td>/api/students/42</td><td>Delete student 42</td></tr>
+        </table>
+    </section>
+
+    <!-- Comparison -->
+    <section id="comparison">
+        <h2>8. Comparing Integration Technologies</h2>
+        <table>
+            <tr><th>Feature</th><th>CORBA</th><th>DCOM</th><th>REST</th></tr>
+            <tr><td>Vendor</td><td>OMG (open standard)</td><td>Microsoft (proprietary)</td><td>Open / vendor-neutral</td></tr>
+            <tr><td>Language Support</td><td>Cross-language (via IDL)</td><td>Mostly C++, VB</td><td>Any language</td></tr>
+            <tr><td>Protocol</td><td>IIOP</td><td>RPC-based</td><td>HTTP/HTTPS</td></tr>
+            <tr><td>Complexity</td><td>High</td><td>Medium-High</td><td>Low</td></tr>
+            <tr><td>Firewall Friendly</td><td>No (custom ports)</td><td>No (custom ports)</td><td>Yes (port 80/443)</td></tr>
+            <tr><td>Current Relevance</td><td>Legacy / niche</td><td>Legacy</td><td>Dominant</td></tr>
+        </table>
+    </section>
+
+</div>
+
+<footer>
+    MIT 219 &mdash; Integrative Programming &amp; Technologies
+</footer>
+
+</body>
+</html>

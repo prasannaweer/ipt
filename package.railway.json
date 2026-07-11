@@ -1,0 +1,12 @@
+{
+  "name": "mit-ipt-implementations",
+  "version": "1.0.0",
+  "description": "MIT 219 Integrative Programming & Technologies - Implementation Guide",
+  "scripts": {
+    "start": "vendor/bin/php-server -t . -p $PORT"
+  },
+  "dependencies": {},
+  "engines": {
+    "php": ">=8.0"
+  }
+}

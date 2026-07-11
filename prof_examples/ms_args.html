@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Monthly Salary Calculator</title>
+</head>
+<body>
+
+    <h1>Monthly Salary Calculator</h1>
+
+    <label>Enter Basic Salary:</label>
+    <input type="number" id="salary">
+
+    <br><br>
+
+    <label>Enter Deductions:</label>
+    <input type="number" id="deduction">
+
+    <br><br>
+
+    <button onclick="calculateSalary()">
+        Calculate Salary
+    </button>
+
+    <hr>
+
+    <h2>Output</h2>
+
+    <p id="result1"></p>
+    <p id="result2"></p>
+    <p id="result3"></p>
+    <p id="result4"></p>
+
+    <script>
+
+        function calculateSalary() {
+
+            // Get user input
+            var basicSalary =
+                parseFloat(document.getElementById("salary").value);
+
+            var deductions =
+                parseFloat(document.getElementById("deduction").value);
+
+            var allowance = 0;
+            var totalSalary = 0;
+
+            // Calculate allowance
+            if (basicSalary < 30000) {
+
+                allowance = basicSalary * 0.10;
+
+            }
+            else if (basicSalary >= 30000 && basicSalary <= 50000) {
+
+                allowance = basicSalary * 0.15;
+
+            }
+            else {
+
+                allowance = basicSalary * 0.20;
+
+            }
+
+            // Calculate total salary
+            totalSalary = basicSalary + allowance - deductions;
+
+            // Display output
+            document.getElementById("result1").innerHTML =
+                "Basic Salary: " + basicSalary;
+
+            document.getElementById("result2").innerHTML =
+                "Allowance: " + allowance;
+
+            document.getElementById("result3").innerHTML =
+                "Deductions: " + deductions;
+
+            document.getElementById("result4").innerHTML =
+                "Monthly Salary: " + totalSalary;
+
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04 - Control Structures</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .output { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        input, button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Control Structures</h1>
+
+    <h2>1. if / else if / else</h2>
+    <p>Enter a number:</p>
+    <input type="number" id="numInput" placeholder="Enter a number">
+    <button onclick="checkNumber()">Check</button>
+    <div class="output" id="ifElseOutput"></div>
+
+    <h2>2. switch Statement - Day of the Week</h2>
+    <p>Enter a day number (0-6):</p>
+    <input type="number" id="dayInput" min="0" max="6" placeholder="0-6">
+    <button onclick="getDayName()">Get Day</button>
+    <div class="output" id="switchOutput"></div>
+
+    <script>
+        // --- if / else if / else ---
+        function checkNumber() {
+            var num = parseFloat(document.getElementById("numInput").value);
+            var output = "Number entered: " + num + "\n";
+
+            if (isNaN(num)) {
+                output += "That is not a valid number.";
+            } else if (num > 0) {
+                output += "The number is positive.";
+            } else if (num < 0) {
+                output += "The number is negative.";
+            } else {
+                output += "The number is zero.";
+            }
+
+            document.getElementById("ifElseOutput").textContent = output;
+        }
+
+        // --- switch Statement ---
+        function getDayName() {
+            var day = parseInt(document.getElementById("dayInput").value);
+            var name;
+
+            switch (day) {
+                case 0:
+                    name = "Sunday";
+                    break;
+                case 1:
+                    name = "Monday";
+                    break;
+                case 2:
+                    name = "Tuesday";
+                    break;
+                case 3:
+                    name = "Wednesday";
+                    break;
+                case 4:
+                    name = "Thursday";
+                    break;
+                case 5:
+                    name = "Friday";
+                    break;
+                case 6:
+                    name = "Saturday";
+                    break;
+                default:
+                    name = "Invalid day number. Please enter 0-6.";
+            }
+
+            document.getElementById("switchOutput").textContent =
+                "Day " + day + " = " + name;
+        }
+    </script>
+</body>
+</html>

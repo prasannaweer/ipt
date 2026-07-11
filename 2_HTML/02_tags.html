@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02 - Text Formatting Tags</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        .example { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example h3 { color: #0d47a1; margin-bottom: 8px; }
+        code { background: #e8eaf6; padding: 2px 6px; border-radius: 3px; font-size: 0.95em; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<h1>02 &mdash; Text Formatting Tags</h1>
+<p>HTML provides many tags to format and structure text content.</p>
+
+<div class="example">
+    <h3>Bold Text</h3>
+    <p><code>&lt;b&gt;</code> and <code>&lt;strong&gt;</code> make text bold.</p>
+    <p>This is <b>bold text</b> using &lt;b&gt;.</p>
+    <p>This is <strong>strong text</strong> using &lt;strong&gt; (semantic emphasis).</p>
+    <pre>&lt;b&gt;bold text&lt;/b&gt;
+&lt;strong&gt;strong/bold text&lt;/strong&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Italic Text</h3>
+    <p><code>&lt;i&gt;</code> and <code>&lt;em&gt;</code> make text italic.</p>
+    <p>This is <i>italic text</i> using &lt;i&gt;.</p>
+    <p>This is <em>emphasized text</em> using &lt;em&gt; (semantic emphasis).</p>
+    <pre>&lt;i&gt;italic text&lt;/i&gt;
+&lt;em&gt;emphasized text&lt;/em&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Underline Text</h3>
+    <p><code>&lt;u&gt;</code> underlines text.</p>
+    <p>This is <u>underlined text</u>.</p>
+    <pre>&lt;u&gt;underlined text&lt;/u&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Paragraph</h3>
+    <p><code>&lt;p&gt;</code> defines a paragraph. Browsers add vertical spacing between paragraphs automatically.</p>
+    <p>This is the first paragraph.</p>
+    <p>This is the second paragraph with its own spacing.</p>
+    <pre>&lt;p&gt;First paragraph.&lt;/p&gt;
+&lt;p&gt;Second paragraph.&lt;/p&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Subscript &amp; Superscript</h3>
+    <p><code>&lt;sub&gt;</code> for subscript, <code>&lt;sup&gt;</code> for superscript.</p>
+    <p>Water is H<sub>2</sub>O and E = mc<sup>2</sup>.</p>
+    <pre>H&lt;sub&gt;2&lt;/sub&gt;O
+E = mc&lt;sup&gt;2&lt;/sup&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Line Break &amp; Horizontal Rule</h3>
+    <p><code>&lt;br&gt;</code> inserts a line break. <code>&lt;hr&gt;</code> inserts a horizontal line.</p>
+    <p>Line one.<br>Line two after a break.</p>
+    <hr>
+    <p>The line above is an &lt;hr&gt; element.</p>
+    <pre>Line one.&lt;br&gt;Line two.
+&lt;hr&gt;</pre>
+</div>
+
+</body>
+</html>

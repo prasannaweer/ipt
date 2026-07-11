@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XML DOMParser Example</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 800px; }
+        h1 { color: #2980b9; border-bottom: 2px solid #2980b9; padding-bottom: 10px; }
+        h2 { color: #1a5276; }
+        .output { background: #f0f0f0; border-left: 4px solid #2980b9; padding: 15px; margin: 15px 0; }
+        table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+        th { background: #2980b9; color: #fff; }
+        tr:nth-child(even) { background: #f2f2f2; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>04 - XML DOMParser</h1>
+    <p>Uses the modern <code>DOMParser</code> API to parse an XML string and extract data with <code>getElementsByTagName()</code>.</p>
+
+    <h2>Parsed XML Data</h2>
+    <div id="output" class="output">Loading...</div>
+
+    <h2>Raw XML String</h2>
+    <pre id="rawXml"></pre>
+
+    <h2>Code Used</h2>
+    <pre>
+var xmlString = '&lt;?xml version="1.0"?&gt;&lt;bookstore&gt;...&lt;/bookstore&gt;';
+
+// Parse the XML string into a DOM document
+var parser = new DOMParser();
+var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+// Get all book elements
+var books = xmlDoc.getElementsByTagName("book");
+
+// Loop through and extract data
+for (var i = 0; i &lt; books.length; i++) {
+    var title  = books[i].getElementsByTagName("title")[0].textContent;
+    var author = books[i].getElementsByTagName("author")[0].textContent;
+    var price  = books[i].getElementsByTagName("price")[0].textContent;
+    var lang   = books[i].getAttribute("lang");
+}</pre>
+
+    <script>
+    // ===== XML STRING =====
+    var xmlString = '<?xml version="1.0" encoding="UTF-8"?>' +
+        '<bookstore>' +
+        '  <book lang="en">' +
+        '    <title>The Great Gatsby</title>' +
+        '    <author>F. Scott Fitzgerald</author>' +
+        '    <year>1925</year>' +
+        '    <price>12.99</price>' +
+        '    <category>Fiction</category>' +
+        '  </book>' +
+        '  <book lang="en">' +
+        '    <title>To Kill a Mockingbird</title>' +
+        '    <author>Harper Lee</author>' +
+        '    <year>1960</year>' +
+        '    <price>11.50</price>' +
+        '    <category>Fiction</category>' +
+        '  </book>' +
+        '  <book lang="es">' +
+        '    <title>Cien Años de Soledad</title>' +
+        '    <author>Gabriel García Márquez</author>' +
+        '    <year>1967</year>' +
+        '    <price>14.50</price>' +
+        '    <category>Fiction</category>' +
+        '  </book>' +
+        '  <book lang="en">' +
+        '    <title>Introduction to Algorithms</title>' +
+        '    <author>Thomas H. Cormen</author>' +
+        '    <year>2009</year>' +
+        '    <price>75.00</price>' +
+        '    <category>Reference</category>' +
+        '  </book>' +
+        '  <book lang="en">' +
+        '    <title>Design Patterns</title>' +
+        '    <author>Erich Gamma</author>' +
+        '    <year>1994</year>' +
+        '    <price>45.99</price>' +
+        '    <category>Reference</category>' +
+        '  </book>' +
+        '</bookstore>';
+
+    // Display raw XML
+    document.getElementById("rawXml").textContent = xmlString;
+
+    // ===== PARSE XML WITH DOMParser =====
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+    // Check for parsing errors
+    var parseError = xmlDoc.getElementsByTagName("parsererror");
+    if (parseError.length > 0) {
+        document.getElementById("output").innerHTML = "<strong>Error parsing XML!</strong>";
+    } else {
+        // Get all book elements
+        var books = xmlDoc.getElementsByTagName("book");
+        var html = "<h3>Books Found: " + books.length + "</h3>";
+        html += "<table>";
+        html += "<tr><th>#</th><th>Title</th><th>Author</th><th>Year</th><th>Price</th><th>Language</th><th>Category</th></tr>";
+
+        var totalValue = 0;
+        var fictionCount = 0;
+
+        for (var i = 0; i < books.length; i++) {
+            var title   = books[i].getElementsByTagName("title")[0].textContent;
+            var author  = books[i].getElementsByTagName("author")[0].textContent;
+            var year    = books[i].getElementsByTagName("year")[0].textContent;
+            var price   = parseFloat(books[i].getElementsByTagName("price")[0].textContent);
+            var lang    = books[i].getAttribute("lang");
+            var category = books[i].getElementsByTagName("category")[0].textContent;
+
+            totalValue += price;
+            if (category === "Fiction") fictionCount++;
+
+            html += "<tr>";
+            html += "<td>" + (i + 1) + "</td>";
+            html += "<td><strong>" + title + "</strong></td>";
+            html += "<td>" + author + "</td>";
+            html += "<td>" + year + "</td>";
+            html += "<td>$" + price.toFixed(2) + "</td>";
+            html += "<td>" + lang.toUpperCase() + "</td>";
+            html += "<td>" + category + "</td>";
+            html += "</tr>";
+        }
+        html += "</table>";
+
+        html += "<br><strong>Summary:</strong> " + fictionCount + " fiction, " +
+                (books.length - fictionCount) + " reference. " +
+                "Total inventory value: $" + totalValue.toFixed(2);
+
+        // Show how to use getAttribute on root element
+        var rootTag = xmlDoc.documentElement.nodeName;
+        html += "<br><strong>Root element:</strong> &lt;" + rootTag + "&gt;";
+
+        document.getElementById("output").innerHTML = html;
+    }
+    </script>
+</div>
+</body>
+</html>

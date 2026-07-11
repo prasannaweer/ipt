@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03 - HTML Style Attribute &amp; CSS</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        h2 { color: #0d47a1; margin-top: 28px; }
+        .example { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example h3 { color: #0d47a1; margin-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; }
+        code { background: #e8eaf6; padding: 2px 6px; border-radius: 3px; font-size: 0.95em; }
+    </style>
+    <!-- Internal CSS Example -->
+    <style>
+        .highlight { background-color: #fff9c4; padding: 4px 8px; }
+        .center-text { text-align: center; }
+        .right-text { text-align: right; }
+    </style>
+</head>
+<body>
+
+<h1>03 &mdash; Style Attribute &amp; CSS Approaches</h1>
+<p>There are three ways to apply styles in HTML: <strong>inline</strong> (style attribute), <strong>internal</strong> (style tag), and <strong>external</strong> (linked .css file).</p>
+
+<h2>1. Inline Styles (style attribute)</h2>
+<p>Apply styles directly to individual elements using the <code>style</code> attribute.</p>
+
+<div class="example">
+    <h3>Background Color</h3>
+    <p style="background-color: #c8e6c9;">This paragraph has a green background.</p>
+    <pre>&lt;p style="background-color: #c8e6c9;"&gt;Green background&lt;/p&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Text Color</h3>
+    <p style="color: #d32f2f;">This paragraph has red text.</p>
+    <p style="color: #1565c0;">This paragraph has blue text.</p>
+    <pre>&lt;p style="color: #d32f2f;"&gt;Red text&lt;/p&gt;
+&lt;p style="color: #1565c0;"&gt;Blue text&lt;/p&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Text Alignment</h3>
+    <p style="text-align: left;">Left-aligned text (default).</p>
+    <p style="text-align: center;">Center-aligned text.</p>
+    <p style="text-align: right;">Right-aligned text.</p>
+    <p style="text-align: justify;">Justified text: This paragraph stretches to fill the full width of the container by adding space between words so that each line has equal length.</p>
+    <pre>&lt;p style="text-align: center;"&gt;Center text&lt;/p&gt;
+&lt;p style="text-align: right;"&gt;Right text&lt;/p&gt;
+&lt;p style="text-align: justify;"&gt;Justified text&lt;/p&gt;</pre>
+</div>
+
+<div class="example">
+    <h3>Font Size &amp; Family</h3>
+    <p style="font-size: 24px; font-family: Georgia, serif;">Large serif text.</p>
+    <p style="font-size: 12px; font-family: 'Courier New', monospace;">Small monospace text.</p>
+    <pre>&lt;p style="font-size: 24px; font-family: Georgia, serif;"&gt;Serif text&lt;/p&gt;
+&lt;p style="font-size: 12px; font-family: 'Courier New', monospace;"&gt;Mono text&lt;/p&gt;</pre>
+</div>
+
+<h2>2. Internal CSS (style tag)</h2>
+<p>Define styles inside a <code>&lt;style&gt;</code> block in the <code>&lt;head&gt;</code>. These styles apply to the entire page.</p>
+
+<div class="example">
+    <h3>Internal CSS Examples</h3>
+    <p class="highlight">This paragraph uses the <code>.highlight</code> class defined internally.</p>
+    <p class="center-text">This paragraph is center-aligned via internal CSS.</p>
+    <p class="right-text">This paragraph is right-aligned via internal CSS.</p>
+    <pre>&lt;head&gt;
+    &lt;style&gt;
+        .highlight { background-color: #fff9c4; }
+        .center-text { text-align: center; }
+    &lt;/style&gt;
+&lt;/head&gt;</pre>
+</div>
+
+<h2>3. Inline vs Internal Summary</h2>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse: collapse;">
+    <tr style="background-color: #1a237e; color: #fff;">
+        <th>Approach</th><th>Scope</th><th>Maintenance</th>
+    </tr>
+    <tr><td>Inline</td><td>Single element</td><td>Hard to maintain at scale</td></tr>
+    <tr><td>Internal</td><td>Entire page</td><td>Better for single pages</td></tr>
+    <tr><td>External</td><td>Multiple pages (shared file)</td><td>Best for maintainability</td></tr>
+</table>
+
+</body>
+</html>

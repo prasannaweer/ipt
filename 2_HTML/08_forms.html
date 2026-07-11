@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 - HTML Forms</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+        pre { background: #263238; color: #a5d6a7; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; margin: 12px 0; }
+        .example-box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin: 14px 0; }
+        .example-box h3 { color: #0d47a1; margin-bottom: 10px; }
+        label { display: block; margin-top: 10px; font-weight: 600; }
+        input, textarea, select { display: block; margin-top: 4px; padding: 8px 10px; width: 100%; max-width: 400px; border: 1px solid #bbb; border-radius: 4px; font-size: 0.95em; }
+        textarea { resize: vertical; }
+        input[type="radio"], input[type="checkbox"] { width: auto; margin-right: 6px; }
+        .radio-group label, .checkbox-group label { display: inline; font-weight: 400; margin-right: 16px; }
+        .btn { padding: 10px 22px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin: 6px 8px 6px 0; }
+        .btn-submit { background: #1a237e; color: #fff; }
+        .btn-reset { background: #607d8b; color: #fff; }
+        .btn:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+
+<h1>08 &mdash; HTML Forms</h1>
+<p>Forms collect user input and send it to a server for processing.</p>
+
+<!-- ===================== FORM SHELL ===================== -->
+<div class="example-box">
+    <h3>Form Shell &mdash; METHOD &amp; ACTION</h3>
+    <pre>&lt;form method="POST" action="process.php"&gt;
+    &lt;!-- form elements go here --&gt;
+&lt;/form&gt;</pre>
+    <ul>
+        <li><code>method="POST"</code> &mdash; Sends data in the request body (secure, no size limit).</li>
+        <li><code>method="GET"</code> &mdash; Appends data to the URL (visible, limited to ~2048 chars).</li>
+        <li><code>action="process.php"</code> &mdash; The server-side script that receives the form data.</li>
+    </ul>
+</div>
+
+<!-- ===================== TEXT INPUTS ===================== -->
+<div class="example-box">
+    <h3>Text Boxes &amp; Text Area</h3>
+    <form method="POST" action="#">
+
+        <label for="fullname">Full Name:</label>
+        <input type="text" id="fullname" name="fullname" placeholder="John Doe" maxlength="50">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="john@example.com">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <label for="message">Message (TextArea):</label>
+        <textarea id="message" name="message" rows="4" cols="40" placeholder="Type your message here..."></textarea>
+
+        <pre>&lt;input type="text" name="fullname" placeholder="John Doe"&gt;
+&lt;input type="email" name="email"&gt;
+&lt;input type="password" name="password"&gt;
+&lt;textarea name="message" rows="4" cols="40"&gt;&lt;/textarea&gt;</pre>
+</div>
+
+<!-- ===================== RADIO BUTTONS ===================== -->
+<div class="example-box">
+    <h3>Radio Buttons</h3>
+    <p>Only one option can be selected at a time (same <code>name</code> groups them).</p>
+
+        <div class="radio-group">
+            <label><input type="radio" name="gender" value="male"> Male</label>
+            <label><input type="radio" name="gender" value="female"> Female</label>
+            <label><input type="radio" name="gender" value="other"> Other</label>
+        </div>
+
+        <pre>&lt;input type="radio" name="gender" value="male"&gt; Male
+&lt;input type="radio" name="gender" value="female"&gt; Female
+&lt;input type="radio" name="gender" value="other"&gt; Other</pre>
+</div>
+
+<!-- ===================== CHECKBOXES ===================== -->
+<div class="example-box">
+    <h3>Checkboxes</h3>
+    <p>Multiple options can be selected.</p>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="lang" value="html"> HTML</label>
+            <label><input type="checkbox" name="lang" value="css"> CSS</label>
+            <label><input type="checkbox" name="lang" value="js"> JavaScript</label>
+            <label><input type="checkbox" name="lang" value="python"> Python</label>
+        </div>
+
+        <pre>&lt;input type="checkbox" name="lang" value="html"&gt; HTML
+&lt;input type="checkbox" name="lang" value="css"&gt; CSS
+&lt;input type="checkbox" name="lang" value="js"&gt; JavaScript</pre>
+</div>
+
+<!-- ===================== DROP-DOWN MENU ===================== -->
+<div class="example-box">
+    <h3>Drop-Down Menu (SELECT / OPTION)</h3>
+
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            <option value="" disabled selected>-- Select a Country --</option>
+            <option value="ID">Indonesia</option>
+            <option value="MY">Malaysia</option>
+            <option value="SG">Singapore</option>
+            <option value="TH">Thailand</option>
+            <option value="PH">Philippines</option>
+        </select>
+
+        <pre>&lt;select name="country"&gt;
+    &lt;option value="" disabled selected&gt;-- Select --&lt;/option&gt;
+    &lt;option value="ID"&gt;Indonesia&lt;/option&gt;
+    &lt;option value="MY"&gt;Malaysia&lt;/option&gt;
+&lt;/select&gt;</pre>
+</div>
+
+<!-- ===================== SUBMIT & RESET ===================== -->
+<div class="example-box">
+    <h3>Submit &amp; Reset Buttons</h3>
+    <button type="submit" class="btn btn-submit">Submit</button>
+    <button type="reset" class="btn btn-reset">Reset</button>
+
+    <pre>&lt;input type="submit" value="Submit"&gt;
+&lt;input type="reset" value="Reset"&gt;
+
+&lt;!-- Or using buttons --&gt;
+&lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;button type="reset"&gt;Reset&lt;/button&gt;</pre>
+</div>
+
+<!-- ===================== FULL EXAMPLE ===================== -->
+<div class="example-box">
+    <h3>Complete Form Example</h3>
+    <pre>&lt;form method="POST" action="process.php"&gt;
+    &lt;label&gt;Name: &lt;input type="text" name="name"&gt;&lt;/label&gt;
+    &lt;label&gt;Email: &lt;input type="email" name="email"&gt;&lt;/label&gt;
+    &lt;label&gt;Gender:&lt;/label&gt;
+    &lt;input type="radio" name="gender" value="male"&gt; Male
+    &lt;input type="radio" name="gender" value="female"&gt; Female
+    &lt;label&gt;Interests:&lt;/label&gt;
+    &lt;input type="checkbox" name="interest" value="web"&gt; Web Dev
+    &lt;input type="checkbox" name="interest" value="ai"&gt; AI
+    &lt;label&gt;Country:&lt;/label&gt;
+    &lt;select name="country"&gt;
+        &lt;option value="ID"&gt;Indonesia&lt;/option&gt;
+        &lt;option value="MY"&gt;Malaysia&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;label&gt;Message:&lt;/label&gt;
+    &lt;textarea name="message" rows="3"&gt;&lt;/textarea&gt;
+    &lt;input type="submit" value="Send"&gt;
+    &lt;input type="reset" value="Clear"&gt;
+&lt;/form&gt;</pre>
+</div>
+
+</body>
+</html>
